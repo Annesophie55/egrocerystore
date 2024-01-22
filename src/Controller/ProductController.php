@@ -30,45 +30,19 @@ class ProductController extends AbstractController
         ]);
     }
 
-// #[Route('/filtersProducts', name: 'app_home_product_filters', methods: "POST")]
-// public function filtersProducts(Request $request, ProductService $productService): JsonResponse {
-//     // Récupérer les filtres de la requête
-//     $sort = $request->get('sort');
-//     $category = $request->get('category');
-//     $priceMax = $request->get('price_max');
-//     $priceRange = $request->get('price_range');
-//     $nutriScore = $request->get('nutriScore');
-
-//     // Utiliser ProductService pour obtenir les produits filtrés
-//     $filteredProducts = $productService->getFilteredProducts($sort, $category, $priceMax, $priceRange, $nutriScore);
-
-//     // Préparer les données pour la réponse JSON
-//     $responseData = [];
-//     foreach ($filteredProducts as $product) {
-//         $productData = [
-//             'id' => $product->getId(),
-//             'name' => $product->getName(),
-//             'description' => $product->getDescription(),
-//             'price' => $product->getPrice(),
-//             'nutriScore' => $productService->calculateNutriScore($product),
-//             'promotion' => null,
-//         ];
-
-//         // Ajouter les informations de promotion si disponibles
-//         if ($promotion = $product->getPromotion()) {
-//             $productData['promotion'] = [
-//                 'description' => $promotion->getDescription(),
-//                 'discount' => $promotion->getDiscount(),
-//                 // Ajouter d'autres champs si nécessaire
-//             ];
-//         }
-
-//         $responseData[] = $productData;
-//     }
-
-//     return new JsonResponse(['products' => $responseData]);
-// }
-
+    #[Route('/bought', name: 'app_bought_products')]
+    public function boughtProducts(): Response
+    {
+        $user = $this->getUser();
+        if(!$user){
+            return $this->redirectToRoute('app_home');
+        }
+        $products = $this->productService->getBoughtProduct($user);
+     
+        return $this->render('product/index.html.twig', [
+            'products' => $products,
+        ]);
+    }
 
     #[Route('/details/{product_id}', name:'app_product_details', methods:'GET')]
     public function productDetails($product_id)

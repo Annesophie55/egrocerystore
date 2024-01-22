@@ -35,14 +35,27 @@ class ProductRepository extends ServiceEntityRepository
                   return $queryBuilder;
   }
 
-  public function filterBySubCategory($subCategoryId, $queryBuilder) {
-    $queryBuilder
-        ->leftJoin('p.subCategories', 'sc') // Assurez-vous que l'alias 'sc' est utilisé ici
-        ->andWhere('sc.id = :subCategoryId') // Utilisez cet alias pour votre condition
-        ->setParameter('subCategoryId', $subCategoryId);
+  public function findBySmallPrice($price, $limit):array{
+      return $this->createQueryBuilder('p')
+      ->select('p','nutrition', 'promotion')
+      ->leftJoin('p.nutrition', 'nutrition')
+      ->leftJoin('p.promotion', 'promotion')
+      ->andWhere('promotion.rising' <= $price)
+      ->setMaxResults($limit)
+      ->getQuery()
+      ->getResult();
+  }
 
-    return $queryBuilder;
-}
+  public function findByPromotion($limit):array{
+    return $this->createQueryBuilder('p')
+    ->select('p','nutrition', 'promotion')
+    ->leftJoin('p.nutrition', 'nutrition')
+    ->leftJoin('p.promotion', 'promotion')
+    ->andWhere('promotion.rising' != null)
+    ->setMaxResults($limit)
+    ->getQuery()
+    ->getResult();
+  }
 
     public function findByRecentlyDate($limit):array{
         return $this->createQueryBuilder('p')

@@ -191,50 +191,6 @@ class ProductService{
         ];
     }
 
-    public function getFilteredProducts($sort, $category, $priceMax, $priceRange, $nutriScore) {
-        // Commencer avec tous les produits
-        $queryBuilder = $this->productRepository->createQueryBuilder('p')
-            ->select('p', 'nutrition', 'promotion')
-            ->leftJoin('p.nutrition', 'nutrition')
-            ->leftJoin('p.promotion', 'promotion');
-
-        // Appliquer les filtres un par un
-        if ($sort) {
-            $sortOrder = $sort === 'ascprice' ? 'ASC' : 'DESC';
-            $queryBuilder->orderBy('p.price', $sortOrder);
-        }
-
-        if ($category) {
-            $queryBuilder->andWhere('c.id = :category')
-                        ->setParameter('category', $category);
-        }
-
-        if ($priceMax) {
-            $queryBuilder->andWhere('p.price <= :maxPrice')
-                        ->setParameter('maxPrice', $priceMax);
-        }
-
-        if ($priceRange) {
-            // Assurez-vous que priceRange contient les clés 'min' et 'max'
-            $queryBuilder->andWhere('p.price >= :minPrice AND p.price <= :maxPrice')
-                        ->setParameter('minPrice', $priceRange['min'])
-                        ->setParameter('maxPrice', $priceRange['max']);
-        }
-
-        // Obtenez les résultats préliminaires sans le filtre NutriScore
-        $products = $queryBuilder->getQuery()->getResult();
-
-        // Si NutriScore est fourni, appliquez le filtre en PHP
-        if ($nutriScore) {
-            $products = array_filter($products, function($product) use ($nutriScore) {
-                $calculatedNutriScore = $this->calculateNutriScore($product);
-                return $calculatedNutriScore <= $nutriScore;
-            });
-        }
-
-        return $products;
-    }
-
     public function getProductsBycategory($category){
 
         $products = $this->productRepository->findAllProductsWithDetailsByCategory($category);
@@ -251,5 +207,82 @@ class ProductService{
 
         return $productsWithnutriScore;
 
+    }
+
+    public function getFavoritesProducts($user){
+
+        // Récupération des favoris de l'utilisateur
+        $favorites = $user->getFavorite()->toArray();
+        
+                    // Transformation des favoris en tableau avec les données nécessaires pour l'affichage
+                    $favoritesData = array_map(function ($favoriteProduct) {
+                        // Assurez-vous que $favoriteProduct est un objet Product
+                        return [
+                            'product' => $favoriteProduct,
+                            'promotion' => $favoriteProduct->getPromotion(),
+                            'nutriScore' => $this->calculateNutriScore($favoriteProduct),
+                        ];
+                    }, $favorites);
+            return $favoritesData;
+        }
+
+    public function getBoughtProduct($user){
+         // Récupération des commandes et des produits achetés
+         $orders = $user->getOrder(); 
+         $ordersArray = $orders->toArray();
+     
+         $buyProductsData = [];
+
+         if ($ordersArray) {
+
+             foreach ($ordersArray as $order) {
+
+                 $orderItems = $order->getOrderItems();
+
+                 foreach ($orderItems as $orderItem) {
+
+                     $product = $orderItem->getProduct();
+
+                     if ($product) {
+                         $buyProductsData[] = [
+                             'product' => $product,
+                             'promotion' => $product->getPromotion(),
+                             'nutriScore' => $this->calculateNutriScore($product),
+                         ];
+                     }
+                 }
+             }
+         }
+        return $buyProductsData;
+    }
+
+    public function getSmallPrice(){
+    $products = $this->productRepository->findBySmallPrice(12, 12);
+    $productsWithnutriScore = [];
+        
+    foreach ($products as $product) {
+    $nutriScore = $this->calculatenutriScore($product);
+
+    $productsWithnutriScore[] = [
+        'product' => $product,
+        'nutriScore' => $nutriScore,
+    ];}
+
+    return $productsWithnutriScore;
+    }
+
+    public function getByPromotion(){
+        $products = $this->productRepository->findByPromotion(4);
+        $productsWithnutriScore = [];
+        
+        foreach ($products as $product) {
+        $nutriScore = $this->calculatenutriScore($product);
+    
+        $productsWithnutriScore[] = [
+            'product' => $product,
+            'nutriScore' => $nutriScore,
+        ];}
+    
+        return $productsWithnutriScore;
     }
 }

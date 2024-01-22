@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-
+use Symfony\Component\Validator\Constraints\Length;
 
 class HomePageController extends AbstractController
 {
@@ -31,57 +31,34 @@ class HomePageController extends AbstractController
     {
         //Vérifie si un utilisateur est connécté
         $user = $this->getUser();
-        //Si oui je récupère la liste de ses favoris et de ses derniers achats
+
+        // Récupération des nouveautés
+        $newProducts = $productService->getRecentlyProduct(16);
+
+        $favoritesProducts = [];
+        $boughtProducts = [];
+        $smallPriceProducts = [];
+        $promotionProducts = [];        
+
         if ($user) {
-            // Récupération des favoris de l'utilisateur
-            $favorites = $user->getFavorite()->toArray();
-        
-            // Transformation des favoris en tableau avec les données nécessaires pour l'affichage
-            $favoritesData = array_map(function ($favoriteProduct) use ($productService) {
-                // Assurez-vous que $favoriteProduct est un objet Product
-                return [
-                    'product' => $favoriteProduct,
-                    'promotion' => $favoriteProduct->getPromotion(),
-                    'nutriScore' => $productService->calculateNutriScore($favoriteProduct),
-                ];
-            }, $favorites);
-        
-            // Récupération des commandes et des produits achetés
-            $orders = $user->getOrder(); 
-            $ordersArray = $orders->toArray();
-        
-            $buyProductsData = [];
-
-            if ($ordersArray) {
-
-                foreach ($ordersArray as $order) {
-
-                    $orderItems = $order->getOrderItems();
-
-                    foreach ($orderItems as $orderItem) {
-
-                        $product = $orderItem->getProduct();
-
-                        if ($product) {
-                            $buyProductsData[] = [
-                                'product' => $product,
-                                'promotion' => $product->getPromotion(),
-                                'nutriScore' => $productService->calculateNutriScore($product),
-                            ];
-                        }
-                    }
-                }
-            }
-        
-            // Récupération des nouveautés
-            $newProducts = $productService->getRecentlyProduct(16);
-        
-            return $this->render('home_page/index.html.twig', [
-                'newProducts' => $newProducts,
-                'favoritesData' => $favoritesData,
-                'buyProductsData' => $buyProductsData,
-            ]);
+            $favoritesProducts = $productService->getFavoritesProducts($user);
+            $boughtProducts = $productService->getBoughtProduct($user);
         }
+        else{
+            $smallPriceProducts = $productService->getSmallPrice();
+            $promotionProducts = $productService->getByPromotion();
+        }
+
+        $boughtProducts = array_slice($boughtProducts, 0, 8);
+
+        return $this->render('home_page/index.html.twig', [
+            'newProducts' => $newProducts,
+            'favoritesProducts' => $favoritesProducts,
+            'boughtProducts' => $boughtProducts,
+            'smallPriceProducts' => $smallPriceProducts,
+            'promotionProducts' => $promotionProducts,
+        ]);
+ 
     }
 
     #[Route('/profil/favorite/toggle/{id}', name: 'toggle_favorite', methods:'POST')]

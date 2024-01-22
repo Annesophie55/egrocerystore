@@ -1,43 +1,70 @@
+{# home_page/index.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Hello HomePageController!{% endblock %}
 
 {% block body %}
-
     {% include 'components/_carrouselPromo.html.twig' %}
-
     {{ render(path('category_nav')) }}
-
     {{ render(path('app_products_filters'))}}
 
     <div class="container-fluid" id="sectionNewProduct">
-        <div class="row">
-            <div class="col-12 col-lg-8 col-md-8 g gx-2 gy-2">
+        <div class="row g gx-2 gy-2">
+            <div class="col-12 col-lg-8 col-md-8">
                 <h1>Les derniers arrivés</h1>
                 <div class="row">
-                    {% for product in newProducts %}
-                    <div class="col-6 col-lg-2 col-md-2 g gx-2 gy-2">
-                    {% include 'components/_productCard.html.twig' with {'product': product} %}
-                    </div>              
+                    {% for productInfo in newProducts %}
+                    <div class="col-6 col-lg-3 col-md-3">
+                    {% include 'components/_productCard.html.twig' with { 'product': productInfo.product, 'promotion': productInfo.product.promotion, 'nutriScore': productInfo.nutriScore } %}
+                    </div>
                     {% endfor %}
                 </div>
             </div>
-            <div class="col-12 col-lg-4 col-md-4 g gx-2 gy-2">
+            
+                {% if app.user and boughtProducts %}
+            <div class="col-12 col-lg-4 col-md-4">
                 <h1>Vos derniers achats</h1>
                 <div class="row">
-                    {% for product in buyProductsData %}
-                    <div class="col-6 col-lg-2 col-md-2 g gx-2 gy-2">
-                    {% include 'components/_productCard.html.twig' with {'product': product} %}
-                    </div>              
-                    {% endfor %}
+                {% for productInfo in boughtProducts %}
+                    <div class="col-12 col-lg-6 col-md-6">
+                    {% include 'components/_productCard.html.twig' with { 'product': productInfo.product, 'promotion': productInfo.promotion, 'nutriScore': productInfo.nutriScore } %}
+                    </div>
+                    {% endfor %}                           
                 </div>
+                <a class="btn btn-success" href="{{ path('app_bought_products')}}">Voir tous</a>
             </div>
-        </div>
-        
+                {% else %}
+            <div class="col-12 col-lg-4 col-md-4">
+                <h1>Promotions</h1>
+                <div class="row">
+                {% for productInfo in promotionProducts %}
+                    <div class="col-12 col-lg-6 col-md-6">
+                        {% include 'components/_productCard.html.twig' with { 'product': productInfo.product, 'promotion': productInfo.promotion, 'nutriScore': productInfo.nutriScore } %}
+                    </div>
+                {% endfor %}
+                </div>                  
+                {% endif %}
+
+            <div>
+                {% if app.user and favoritesProducts %}
+                    <h1>Vos favoris</h1>
+                    <div class="row">
+                        {% for productInfo in favoritesProducts %}
+                        <div class="col-6 col-lg-2 col-md-2">
+                            {% include 'components/_productCard.html.twig' with { 'product': productInfo.product, 'promotion': productInfo.promotion, 'nutriScore': productInfo.nutriScore } %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <h1>Petits prix</h1>
+                    <div class="row">
+                        {% for productInfo in smallPriceProducts %}
+                        <div class="col-6 col-lg-2 col-md-2">
+                            {% include 'components/_productCard.html.twig' with { 'product': productInfo.product, 'promotion': productInfo.promotion, 'nutriScore': productInfo.nutriScore } %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
     </div>
-
 {% endblock %}
-
-
-
-

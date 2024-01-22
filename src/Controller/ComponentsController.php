@@ -39,68 +39,66 @@ class ComponentsController extends AbstractController
     }
 
     #[Route('/products/filters', name: 'app_products_filters', methods: ['GET', 'POST'])]
-public function filtersProducts(Request $request, ProductService $productService, ProductRepository $productRepository): Response {
+    public function filtersProducts(Request $request, ProductService $productService, ProductRepository $productRepository): Response {
 
     // Construire la requête de base
     $queryBuilder = $productRepository->createQueryBuilder('p')
-                                      ->leftJoin('p.categories', 'c');
+    ->leftJoin('p.categories', 'c');
 
     $sort = $request->request->get('sort');
     $nutriScore = $request->request->get('nutriScore');
     $categoryInput = $request->request->get('category'); 
 
-    $categoriesWithChildren = $this->categoryService->getTopLevelCategoriesWithChildren();
 
+    // Appliquer les filtres
+      if ($sort) {
+        $queryBuilder->orderBy('p.price', $sort); // Exemple pour le tri par prix
+    }
 
-    // var_dump($sort);
-    // var_dump($nutriScore);
-    // var_dump($categoryInput);
+    if ($nutriScore) {
+        $queryBuilder->andWhere('p.nutriScore = :nutriScore')
+                     ->setParameter('nutriScore', $nutriScore);
+    }
 
-    // $logger->info('Category Input', ['categoryInput' => $categoryInput]);
+    if ($categoryInput) {
+        $queryBuilder->andWhere('c.name = :category')
+                     ->setParameter('category', $categoryInput);
+    }
 
-    // if ($categoryInput) {
-    //     $productRepository->filterByCategory($categoryInput);
-    // }
-    // if ($sort) {
-    //     $productRepository->filterBySort($sort, $queryBuilder);
-    // }
-    // if ($nutriScore) {
-    //     $productRepository->filterByNutriscore($nutriScore, $queryBuilder);
-    // }
-
-    // $filteredProducts = $queryBuilder->getQuery()->getResult();
-
-    // var_dump($filteredProducts);
+    // Obtenir les produits filtrés
+    $productsData = $queryBuilder->getQuery()->getResult();
 
 
 
     // Préparer les données pour la réponse
-    // $products = [];
-    // foreach ($filteredProducts as $product) {
-    //     $productData = [
-    //         'id' => $product->getId(),
-    //         'name' => $product->getName(),
-    //         'description' => $product->getDescription(),
-    //         'price' => $product->getPrice(),
-    //         'nutriScore' => $productService->calculateNutriScore($product),
-    //         'promotion' => null,
-    //     ];
-
-    //     var_dump($productData);
+    $products = [];
+    foreach ($productsData as $product) {
+        $productData = [
+            'id' => $product->getId(),
+            'name' => $product->getName(),
+            'description' => $product->getDescription(),
+            'price' => $product->getPrice(),
+            'nutriScore' => $productService->calculateNutriScore($product),
+            'promotion' => null,
+        ];
 
 
-    //     if ($promotion = $product->getPromotion()) {
-    //         $productData['promotion'] = [
-    //             'rising' => $promotion->getRising(),
-    //             // Ajouter d'autres champs si nécessaire
-    //         ];
-    //     }
+        if ($promotion = $product->getPromotion()) {
+            $productData['promotion'] = [
+                'rising' => $promotion->getRising(),
+                // Ajouter d'autres champs si nécessaire
+            ];
+        }
 
-    //     $products[] = $productData;
-    // }
+        $products[] = $productData;
+    }
 
-    return $this->render('components/_filtersForm.html.twig', [
+    $categoriesWithChildren = $this->categoryService->getTopLevelCategoriesWithChildren();
+
+    return $this->render('product/index.html.twig', [
+        'products' => $products,
         'categoriesWithChildren' => $categoriesWithChildren,
     ]);
 }
+
 }
