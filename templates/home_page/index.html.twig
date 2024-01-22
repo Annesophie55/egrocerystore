@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomePageController!{% endblock %}
+
+{% block body %}
+
+    {% include 'components/_carrouselPromo.html.twig' %}
+
+    {{ render(path('category_nav')) }}
+
+    {{ render(path('app_products_filters'))}}
+
+    <div class="container-fluid" id="sectionNewProduct">
+        <div class="row">
+            {% for product in newProducts %}
+                <div class="col-6 col-lg-2 col-md-2 g gx-2 gy-2">
+                {% include 'components/_productCard.html.twig' with {'product': product} %}
+            </div>              
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+

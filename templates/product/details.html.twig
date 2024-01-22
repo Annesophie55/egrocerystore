@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du produit - {{ product.product.name }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="card">
+        <div class="card-header">
+            Détails du produit
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{{ asset(product.product.image) }}" alt="{{ product.product.name }}" class="img-fluid">
+                </div>
+                <div class="col-md-6">
+                    <h3 class="card-title">{{ product.product.name }}</h3>
+                    <p class="card-text">{{ product.product.description }}</p>
+                    <p class="card-text">Prix: {{ product.product.price | number_format(2, '.', ',') }} €</p>
+                    <p class="card-text">NutriScore: {{ product.nutriScore }}</p>
+                    {% if product.product.promotion %}
+                        <p class="card-text">Promotion: -{{ product.product.promotion.rising }}%</p>
+                    {% endif %}
+
+                    <h5 class="mt-4">Valeurs nutritionnelles pour 100g :</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item">Énergie : {{ product.product.nutrition.energy }} kcal ({{ (product.product.nutrition.energy / 2000 * 100) | number_format(2, '.', ',') }}% des AJR)</li>
+                        <li class="list-group-item">Matières grasses : {{ product.product.nutrition.lipids }} g ({{ (product.product.nutrition.lipids / 70 * 100) | number_format(2, '.', ',') }}% des AJR)</li>
+                        <li class="list-group-item">Acides gras saturés : {{ product.product.nutrition.saturatedFattyAcid }} g ({{ (product.product.nutrition.saturatedFattyAcid / 20 * 100) | number_format(2, '.', ',') }}% des AJR)</li>
+                        <li class="list-group-item">Glucides : {{ product.product.nutrition.carbohydrates }} g ({{ (product.product.nutrition.carbohydrates / 260 * 100) | number_format(2, '.', ',') }}% des AJR)</li>
+                        <li class="list-group-item">Sucres : {{ product.product.nutrition.sugar }} g ({{ (product.product.nutrition.sugar / 90 * 100) | number_format(2, '.', ',') }}% des AJR)</li>
+                        <li class="list-group-item">Protéines : {{ product.product.nutrition.proteins }} g ({{ (product.product.nutrition.proteins / 50 * 100) | number_format(2, '.', ',') }}% des AJR)</li>
+                        <li class="list-group-item">Sel : {{ product.product.nutrition.salt }} g ({{ (product.product.nutrition.salt / 6 * 100) | number_format(2, '.', ',') }}% des AJR)</li>
+                        <li class="list-group-item">Fibres : {{ product.product.nutrition.fibers }} g</li>
+                    </ul>
+                    
+                    <a href="{{ path('app_add_to_cart', {'product_id': product.product.id}) }}" class="btn btn-success mt-2">
+                    Ajouter au panier</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

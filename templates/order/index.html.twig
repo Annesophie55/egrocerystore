@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Index des commandes{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Vos commandes</h1>
+        <div class="row">
+            {% for order in orders %}
+                <div class="col-12">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5 class="card-title">Commande #{{ order.id }}</h5>
+                                    <p class="card-text"><small class="text-muted">Date de commande : {{ order.createdAt|date('Y-m-d H:i:s') }}</small></p>
+                                </div>
+                                <div>
+                                    <p class="card-text">Quantité de produits commandés : {{ order.quantity }}</p>
+                                    <p class="card-text">Prix total de la commande : {{ order.totalPrice }} €</p>
+                                </div>
+                                <div>
+                                    <p class="card-text">Mode de retrait : {{ order.withdrawalChoice|capitalize }}</p>
+                                    <a href="{{ path('app_order_show', {'id': order.id}) }}" class="btn btn-outline-primary btn-sm">Détails de la commande</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    Aucune commande trouvée.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .container {
+        max-width: 75%; /* 75% de la largeur de l'écran */
+        margin: auto;
+    }
+    .card {
+        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+    }
+    .card-body {
+        font-size: 0.9rem;
+    }
+    .d-flex {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .btn-outline-primary {
+        margin-top: 0.5rem;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProductController!{% endblock %}
+
+{% block body %}
+
+    {% include 'components/_carrouselPromo.html.twig' %}
+
+    {{ render(path('category_nav')) }}
+
+    {{ render(path('app_products_filters'))}}
+
+<div class="container-fluid">
+    <div class="row">
+        {% for product in products %}
+        <div class="col-6 col-lg-3 col-md-3" id="productsContainer">
+            {% include 'components/_productCard.html.twig'  with {'product': product} %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}
+{# {% block js %}
+<script> #}
+{# // Intercepter la soumission du formulaire
+document.getElementById('filtersForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Empêcher la soumission normale du formulaire
+
+    // Collecter les données du formulaire
+    const formData = new FormData(this);
+
+    // Envoyer la requête AJAX
+    fetch('/product/filtersProducts', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        const productsContainer = document.getElementById('productsContainer'); 
+        productsContainer.innerHTML = '';
+
+        data.products.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.classList.add('card', 'h-100', 'p-0');
+            productCard.innerHTML = `
+                <img src="${product.image}" class="card-img-top" alt="${product.name}">
+                <div class="card-body">
+                    <h5 class="card-title">${product.name}</h5> 
+                    <p class="card-text">Prix ${product.price.toFixed(2)} €</p> 
+                    <p class="nutri-score">Nutriscore ${product.nutriScore}</p>
+                    ${product.promotion ? `<p class="promotion">Promotion ${product.promotion.rising} %</p>` : ''}
+                </div>
+                <div class="card-footer"> 
+                    <a href="/product/details/${product.id}" class="btn btn-success">Détails</a> 
+                    <a href="#" class="card-link ms-5">Ajouter au panier</a>
+                </div>
+            `;
+            productsContainer.appendChild(productCard);
+        });
+    })
+    .catch(error => {
+        console.error('Erreur AJAX:', error);
+    });
+});
+</script> #}
+{# {% endblock %} #}
+
+
+

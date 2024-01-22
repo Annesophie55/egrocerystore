@@ -1,0 +1,16 @@
+<ul class="nav nav-tabs mt-3 d-flex justify-content-center bg-success">
+    {% for item in categoriesWithChildren %}
+        <li class="nav-item dropdown me-2">
+            {% if item.children|length > 0 %}
+                <a class="nav-link dropdown-toggle text-light" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{{ item.category.name }}</a>
+                <ul class="dropdown-menu">
+                    {% for child in item.children %}
+                        <li><a class="dropdown-item" href="{{ path('app_product_category', {'category_id': child.id}) }}">{{ child.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <a class="nav-link text-light" href="{{ path('app_product_category', {'category_id': item.category.id}) }}">{{ item.category.name }}</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

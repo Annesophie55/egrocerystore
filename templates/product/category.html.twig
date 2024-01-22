@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProductController!{% endblock %}
+
+{% block body %}
+    {% include 'components/_carrouselPromo.html.twig' %}
+     {% include 'components/_categoryNav.html.twig' with {'categoryWithSubcategoryByCategory': categoryWithSubcategoryByCategory} %} 
+    {% include 'components/_filtersForm.html.twig' with {'categoryWithSubcategoryByCategory': categoryWithSubcategoryByCategory} %}  
+<div class="container-fluid">
+    <div class="row">
+        {% for product in products %}
+        <div class="col-6 col-lg-3 col-md-3" id="productsContainer">
+            {% include 'components/_productCard.html.twig'  with {'product': product} %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %}

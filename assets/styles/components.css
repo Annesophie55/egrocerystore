@@ -1,0 +1,64 @@
+
+#searchBar input{
+  border-top-right-radius: 0px !important;
+  border-bottom-right-radius: 0px !important;
+  height: 35px;
+}
+#searchBar button{
+  border-top-left-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+  background-color: rgba(151, 248, 190, 1);
+  height: 35px;
+}
+#searchBar button svg{
+  margin-bottom: 10px;
+}
+
+/* carrousel */
+
+#carouselPromo{
+  height: 400px !important;
+  z-index: 2;
+}
+
+#brandString{
+  position: absolute;
+  width: auto;
+  padding: 7px;
+  border-radius: 5px;
+  z-index: 1;
+  background-color: rgba(151, 248, 190, 1);
+  top: 50px;
+  left: 70px;
+  font-family: 'Lato';
+  font-weight: 400;
+  font-size: 30px;
+}
+
+#btnAllPromos{
+  position: absolute;
+  z-index: 1;
+  bottom: 25%;
+  right: 10%;
+}
+
+.carousel-item{
+  height: 420px !important;
+  width: 100% !important;
+}
+
+.carousel-item img{
+  height: 100% !important;
+}
+
+/* Le formulaire pour filter les résultats de recherche de produit */
+#favoritesSwitch{
+  height: 37px;
+}
+
+/* cartes produits */
+
+.bi-star.filled-star {
+  fill: yellow;
+}
+

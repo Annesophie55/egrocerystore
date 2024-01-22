@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+<form action="{{ path('app_user_register') }}" method="POST" class="p-4 shadow-lg rounded" style="background-color: #f8f9fa;">
+    {{ form_start(form) }}
+    <div class="mb-3">
+        {{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.email, {'attr': {'class': 'form-control', 'placeholder': 'Votre email'}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.password, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.password, {'attr': {'class': 'form-control', 'placeholder': 'Votre mot de passe'}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.lastName, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Votre nom'}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.firstName, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Votre prénom'}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.adress, 'Adresse', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.adress, {'attr': {'class': 'form-control', 'placeholder': 'Votre adresse'}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.phone, 'Téléphone', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.phone, {'attr': {'class': 'form-control', 'placeholder': 'Votre téléphone'}}) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.cart, 'Panier', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.cart, {'attr': {'class': 'form-select'}}) }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">S'inscrire</button>
+    {{ form_end(form) }}
+</form>
+
+{% endblock %}

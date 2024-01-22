@@ -1,0 +1,28 @@
+<div id="carouselPromo" class="carousel slide" data-bs-ride="carousel">
+  <div id="brandString">L'épicerie en ligne qui vous facilite la vie</div>
+  {% block carrousel %}
+  <div class="carousel-inner">
+    <div class="carousel-item">
+      <img src="{{ asset('images/promoBroco.jpg')}}" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="{{ asset('images/promoBroco.jpg')}}" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="{{ asset('images/promoBroco.jpg')}}" class="d-block w-100" alt="...">
+    </div>
+  </div>
+  {% endblock %} 
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+  {% block btnCarrousel %}
+      <button class="btn btn-warning text-success" id="btnAllPromos">Afficher toutes les promotions</button>
+  {% endblock %}
+
+</div>

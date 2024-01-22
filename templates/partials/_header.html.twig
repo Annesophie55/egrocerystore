@@ -1,0 +1,101 @@
+{# intégration du header #}
+<nav class="navbar navbar-expand-lg w-100">
+  <div class="w-100">
+    <div id="header_top_block" class="container-fluid w-100 d-flex justify-content-between">
+      {% include 'components/_searchBar.html.twig' %}
+      <div>
+        <a class="navbar-brand me-5" href="{{ path('app_home_page') }}">Vitefrais</a>
+      </div>
+
+        <div class="collapse navbar-collapse" id="userDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+               <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-circle me-2" viewBox="0 0 16 16">
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+              <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+            </svg>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-dark">
+
+                {% if app.user != is_granted("ROLE_ADMIN") %}   
+                      <li><a class="dropdown-item" href="#">Vos favoris</a></li>
+                      <li><a class="dropdown-item" href="{{ path('app_order_index')}}">Vos commande</a></li>
+                      <li><a class="dropdown-item" href="#">Votre profil</a></li>
+                      <li><hr class="dropdown-divider"></li>
+                      <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se deconnecter</a></li>
+                 {% elseif is_granted('ROLE_ADMIN')%}
+                      <li><a class="dropdown-item" href="#">Administration</a></li>
+                      <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se deconnecter</a></li>
+                  {% else %}
+                  <li><a class="dropdown-item" href="{{ path('app_register') }}">S'inscrire</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>Se connecter</li>
+                  <li><form method="post" action="{{ path('app_login')}}">
+                          <label for="inputEmail">Email</label>
+                          <input type="email" value="" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                          <label for="inputPassword">Password</label>
+                          <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+
+                          <input type="hidden" name="_csrf_token"
+                                value="{{ csrf_token('authenticate') }}"
+                          >
+
+                          <button class="btn btn-lg btn-primary" type="submit">
+                              Sign in
+                          </button>
+                        </form></li>
+                   {% endif %}
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <a href="{{ path('app_cart') }}" class="btn btn-dark h-75 mt-2">
+       <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-basket2-fill" viewBox="0 0 16 16">
+          <path d="M5.929 1.757a.5.5 0 1 0-.858-.514L2.217 6H.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h.623l1.844 6.456A.75.75 0 0 0 3.69 15h8.622a.75.75 0 0 0 .722-.544L14.877 8h.623a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1.717L10.93 1.243a.5.5 0 1 0-.858.514L12.617 6H3.383zM4 10a1 1 0 0 1 2 0v2a1 1 0 1 1-2 0zm3 0a1 1 0 0 1 2 0v2a1 1 0 1 1-2 0zm4-1a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1"/>
+          </svg>
+    </a>
+       
+
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </div>
+    
+
+    <div id="header_down_block" class="container-fluid w-100 d-flex flex-between">
+        </button>
+        <div class="collapse navbar-collapse d-flex justify-content-center" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item  me-5">
+              <a class="nav-link" aria-current="page" href="{{ path('app_home_page') }}">Accueil</a>
+            </li>
+          <!-- Dropdown for 'Nos Rayons' -->
+            <li class="nav-item dropdown me-5">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownRayons" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Nos Rayons
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdownRayons">
+                {% for item in categoriesWithChildren %}
+                <li>
+                  <a class="dropdown-item" href="{{ path('app_product_category', {'category_id': item.category.id}) }}">{{ item.category.name }}</a>
+                </li>
+                {% endfor %}
+              </ul>
+            </li>
+
+            <li class="nav-item me-5">
+              <a class="nav-link" href="#">Promotions</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link">Contact</a>
+            </li>
+          </ul>
+        </div>
+    </div>
+  </div>
+</nav>
+
+
+

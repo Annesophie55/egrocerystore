@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la commande{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Contenu principal -->
+        <div class="col-lg-8 col-md-12">
+            <h2 class="mb-4">Détails de la commande #{{ order.id }}</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                <table class="table table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Produit</th>
+                            <th>Prix unitaire</th>
+                            <th>Quantité</th>
+                            <th>Sous-total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in products %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.product.price | number_format(2, '.', ',') }} €</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ (item.product.price * item.quantity) | number_format(2, '.', ',') }} €</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </table>
+            </div>
+            <a href="{{ path('app_order_index') }}" class="btn btn-secondary mt-2">Retour à la liste</a>
+
+        </div>
+        <!-- Récapitulatif de la commande -->
+        <div class="col-lg-4 col-md-12">
+            <div class="order-summary sticky-top">
+                <h4>Récapitulatif</h4>
+                <p>Sous-total : <span class="subtotal">{{ order.totalPrice - (order.totalPrice * 0.1) | number_format(2, '.', ',') }} €</span></p>
+                <p>Taxe (10%) : <span class="tax">{{ (order.totalPrice * 0.1) | number_format(2, '.', ',') }} €</span></p>
+                <p>Total : <span class="total">{{ (order.totalPrice * 1.1) | number_format(2, '.', ',') }} €</span></p>
+                <p>Mode de retrait : <span class="withdrawal">{{ order.withdrawalChoice }}</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+.order-summary {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    margin-top: 20px;
+}
+
+.sticky-top {
+    top: 20px; /* Adjust the value as needed */
+}
+
+/* Add responsive adjustments if necessary */
+@media (max-width: 991px) {
+    .sticky-top {
+        position: static; /* Reset position on smaller screens */
+    }
+}
+</style>
+{% endblock %}
+
+
+
+
+
+
