@@ -46,7 +46,7 @@ class Product
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: OrderItem::class)]
     private Collection $orderItems;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'favorite')]
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'favorites')]
     private Collection $user_favorites;
 
     public function __construct()

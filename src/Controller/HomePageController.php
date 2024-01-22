@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-#[Route('/home')]
+
 class HomePageController extends AbstractController
 {
     private $entityManager;
@@ -27,16 +27,62 @@ class HomePageController extends AbstractController
     }
 
     #[Route('/', name: 'app_home_page')]
-    public function index(ProductService $productService, CategoryService $categoryService): Response
+    public function index(ProductService $productService, CategoryService $categoryService, ProductRepository $productRepository): Response
     {
-        //Récupération des nouveautés
-        $newProducts = $productService->getRecentlyProductWithFavorites();
+        //Vérifie si un utilisateur est connécté
+        $user = $this->getUser();
+        //Si oui je récupère la liste de ses favoris et de ses derniers achats
+        if ($user) {
+            // Récupération des favoris de l'utilisateur
+            $favorites = $user->getFavorite()->toArray();
         
-        return $this->render('home_page/index.html.twig', [
-            'newProducts' => $newProducts,
-        ]);
-    }
+            // Transformation des favoris en tableau avec les données nécessaires pour l'affichage
+            $favoritesData = array_map(function ($favoriteProduct) use ($productService) {
+                // Assurez-vous que $favoriteProduct est un objet Product
+                return [
+                    'product' => $favoriteProduct,
+                    'promotion' => $favoriteProduct->getPromotion(),
+                    'nutriScore' => $productService->calculateNutriScore($favoriteProduct),
+                ];
+            }, $favorites);
+        
+            // Récupération des commandes et des produits achetés
+            $orders = $user->getOrder(); 
+            $ordersArray = $orders->toArray();
+        
+            $buyProductsData = [];
 
+            if ($ordersArray) {
+
+                foreach ($ordersArray as $order) {
+
+                    $orderItems = $order->getOrderItems();
+
+                    foreach ($orderItems as $orderItem) {
+
+                        $product = $orderItem->getProduct();
+
+                        if ($product) {
+                            $buyProductsData[] = [
+                                'product' => $product,
+                                'promotion' => $product->getPromotion(),
+                                'nutriScore' => $productService->calculateNutriScore($product),
+                            ];
+                        }
+                    }
+                }
+            }
+        
+            // Récupération des nouveautés
+            $newProducts = $productService->getRecentlyProduct(16);
+        
+            return $this->render('home_page/index.html.twig', [
+                'newProducts' => $newProducts,
+                'favoritesData' => $favoritesData,
+                'buyProductsData' => $buyProductsData,
+            ]);
+        }
+    }
 
     #[Route('/profil/favorite/toggle/{id}', name: 'toggle_favorite', methods:'POST')]
     public function toggleFavorite(Product $product): Response

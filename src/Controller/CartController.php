@@ -45,10 +45,12 @@ class CartController extends AbstractController
 
     #[Route('/', name: 'app_cart')]
     public function index() {
+
+        //Je récupère le panier et son total 
         $cart = $this->cartService->getCart();
         $total = $this->cartService->getCartTotal();
 
-        // Convertir les IDs de produits dans le panier en entités complètes
+        // Je convertis les IDs de produits dans le panier en entités complètes
         $products = [];
         foreach ($cart as $productId => $details) {
             $product = $this->productRepository->find($productId);

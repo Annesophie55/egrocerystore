@@ -33,41 +33,6 @@ class ProductService{
         return $productsWithnutriScore;
   }
 
-  public function getRecentlyProductWithFavorites($user = null) {
-
-    $products = $this->productRepository->findByRecentlyDate(16);
-
-    $favoriteProductIds = [];
-
-    // Si l'utilisateur est connecté, récupérez ses produits favoris
-    if ($user) {
-        $favoriteProductIds[] = $user->getFavorite();
-    }
-
-    $productsWithnutriScoreAndFavorites = [];
-
-    foreach ($products as $product) {
-        $nutriScore = $this->calculateNutriScore($product);
-        $isFavorite = in_array($product->getId(), $favoriteProductIds);
-
-        $productsWithnutriScoreAndFavorites[] = [
-            'product' => $product,
-            'nutriScore' => $nutriScore,
-            'isFavorite' => $isFavorite,
-        ];
-    }
-
-    // Tri des produits : favoris en premier, puis par date
-    usort($productsWithnutriScoreAndFavorites, function ($a, $b) {
-        if ($a['isFavorite'] === $b['isFavorite']) {
-            return $b['product']->getCreatedAt() <=> $a['product']->getCreatedAt();
-        }
-        return $b['isFavorite'] <=> $a['isFavorite'];
-    });
-
-    return $productsWithnutriScoreAndFavorites;
-}
-
 
     public function calculatenutriScore($product):string{
 
@@ -273,24 +238,6 @@ class ProductService{
     public function getProductsBycategory($category){
 
         $products = $this->productRepository->findAllProductsWithDetailsByCategory($category);
-
-        $productsWithnutriScore = [];
-        
-        foreach ($products as $product) {
-        $nutriScore = $this->calculatenutriScore($product);
-    
-        $productsWithnutriScore[] = [
-            'product' => $product,
-            'nutriScore' => $nutriScore,
-        ];}
-
-        return $productsWithnutriScore;
-
-    }
-
-    public function getProductsBySubCategory($subCategory_id){
-
-        $products = $this->productRepository->findAllProductsWithDetailsBySubCategory($subCategory_id);
 
         $productsWithnutriScore = [];
         

@@ -55,13 +55,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $isVerified = false;
 
     #[ORM\ManyToMany(targetEntity: Product::class, inversedBy: 'user_favorites')]
-    private Collection $favorite;
+    private Collection $favorites;
 
     public function __construct()
     {
         $this->order = new ArrayCollection();
         $this->roles = ['ROLE_USER'];
-        $this->favorite = new ArrayCollection();
+        $this->favorites = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -197,12 +197,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Order>
      */
-    public function getorder(): Collection
+    public function getOrder(): Collection
     {
         return $this->order;
     }
 
-    public function addorder(Order $order): static
+    public function addOrder(Order $order): static
     {
         if (!$this->order->contains($order)) {
             $this->order->add($order);
@@ -212,7 +212,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeorder(Order $order): static
+    public function removeOrder(Order $order): static
     {
         if ($this->order->removeElement($order)) {
             // set the owning side to null (unless already changed)
@@ -241,13 +241,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getFavorite(): Collection
     {
-        return $this->favorite;
+        return $this->favorites;
     }
 
     public function addFavorite(Product $favorite): static
     {
-        if (!$this->favorite->contains($favorite)) {
-            $this->favorite->add($favorite);
+        if (!$this->favorites->contains($favorite)) {
+            $this->favorites->add($favorite);
         }
 
         return $this;
@@ -255,7 +255,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeFavorite(Product $favorite): static
     {
-        $this->favorite->removeElement($favorite);
+        $this->favorites->removeElement($favorite);
 
         return $this;
     }

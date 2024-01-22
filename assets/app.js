@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
           var productId = this.dataset.productId;
           var icon = this.querySelector('.bi-star');
           
-          fetch('/home/profil/favorite/toggle/' + productId, {
+          fetch('/profil/favorite/toggle/' + productId, {
               method: 'POST',
               headers: {
     
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
               if (data.status === 'added') {
                   icon.style.fill = 'yellow';
               } else if (data.status === 'removed') {
-                  icon.style.fill = 'currentColor';
+                  icon.style.fill = 'black';
               }
           })
           .catch(error => {

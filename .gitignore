@@ -25,4 +25,5 @@
 ###< symfony/asset-mapper ###
 
 ###> node_modules ###
-/node_modules
+public/node_modules
+###> node_modules ###
