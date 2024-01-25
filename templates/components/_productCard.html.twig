@@ -4,9 +4,9 @@
     <div class="card-body">
     <h5 class="card-title">{{ product.name }}</h5> 
     <p class="card-text">Prix {{ product.price | number_format(2, '.', ',') }} €</p> 
-    <p class="nutri-score">Nutriscore {{ nutriScore }}</p>
-    {% if promotion is not null %}
-      <p class="promotion">Promotion {{ promotion.rising }} %</p> 
+    <p class="nutri-score">Nutriscore {{ product | nutriscore }}</p>
+    {% if product.promotion is not null %}
+      <p class="promotion">Promotion {{ product.promotion.rising }} %</p> 
     {% endif %}
     </div>
     <div class="card-footer d-flex justify-content-around"> 

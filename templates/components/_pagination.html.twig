@@ -1,0 +1,32 @@
+{# templates/components/pagination.twig.html #}
+{% if totalPages > 1 %}
+<nav>
+  <ul class="pagination justify-content-center">
+    {% set prev = currentPage - 1 %}
+    {% set next = currentPage + 1 %}
+    
+    {# Previous button #}
+    <li class="page-item {{ currentPage == 1 ? 'disabled' : '' }}">
+      <a class="page-link" href="{{ path(routeName, queryParameters|merge({(pageParameterName): prev})) }}" aria-label="Précédent">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Précédent</span>
+      </a>
+    </li>
+    
+    {# Page links #}
+    {% for i in totalPages %}
+    <li class="page-item {{ i == currentPage ? 'active' : '' }}">
+      <a class="page-link" href="{{ path(routeName, queryParameters|merge({(pageParameterName): i})) }}">{{ i }}</a>
+    </li>
+    {% endfor %}
+    
+    {# Next button #}
+    <li class="page-item {{ currentPage == totalPages ? 'disabled' : '' }}">
+      <a class="page-link" href="{{ path(routeName, queryParameters|merge({(pageParameterName): next})) }}" aria-label="Suivant">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Suivant</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+{% endif %}

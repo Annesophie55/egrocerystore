@@ -43,13 +43,14 @@ class HomePageController extends AbstractController
         if ($user) {
             $favoritesProducts = $productService->getFavoritesProducts($user);
             $boughtProducts = $productService->getBoughtProduct($user);
+            $boughtProducts = array_slice($boughtProducts, 0, 8);
         }
         else{
             $smallPriceProducts = $productService->getSmallPrice();
             $promotionProducts = $productService->getByPromotion();
         }
 
-        $boughtProducts = array_slice($boughtProducts, 0, 8);
+
 
         return $this->render('home_page/index.html.twig', [
             'newProducts' => $newProducts,

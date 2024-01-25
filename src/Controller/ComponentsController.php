@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Services\ProductService;
 use App\Services\CategoryService;
 use App\Repository\ProductRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,15 +42,17 @@ class ComponentsController extends AbstractController
     #[Route('/products/filters', name: 'app_products_filters', methods: ['GET', 'POST'])]
     public function filtersProducts(Request $request, ProductService $productService, ProductRepository $productRepository): Response {
 
-    // Construire la requête de base
-    $queryBuilder = $productRepository->createQueryBuilder('p')
-    ->leftJoin('p.categories', 'c');
 
     $sort = $request->request->get('sort');
     $nutriScore = $request->request->get('nutriScore');
     $categoryInput = $request->request->get('category'); 
+    $page = $request->query->get('page', 1); 
 
+    $queryBuilder = $productRepository->createQueryBuilder('p')
+                                    ->leftJoin('p.nutrition', 'nutrition')
+                                    ->leftJoin('p.categories', 'category');
 
+        // dd($queryBuilder);
     // Appliquer les filtres
       if ($sort) {
         $queryBuilder->orderBy('p.price', $sort); // Exemple pour le tri par prix
@@ -65,39 +68,43 @@ class ComponentsController extends AbstractController
                      ->setParameter('category', $categoryInput);
     }
 
-    // Obtenir les produits filtrés
-    $productsData = $queryBuilder->getQuery()->getResult();
+    $limit = 10;
 
+    $offset =($page -1)* $limit;
 
+    $query = $queryBuilder->setFirstResult($offset)
+                        ->setMaxResults($limit)
+                        ->getQuery();
 
-    // Préparer les données pour la réponse
+    $paginator = new Paginator($query, $fetchJoinCollection = true);
+
     $products = [];
-    foreach ($productsData as $product) {
-        $productData = [
+    foreach ($paginator as $product) {
+        $products[] = [
             'id' => $product->getId(),
             'name' => $product->getName(),
             'description' => $product->getDescription(),
             'price' => $product->getPrice(),
             'nutriScore' => $productService->calculateNutriScore($product),
-            'promotion' => null,
+            'promotion' => $product->getPromotion() ? $product->getPromotion()->getRising() : null,
         ];
 
-
-        if ($promotion = $product->getPromotion()) {
-            $productData['promotion'] = [
-                'rising' => $promotion->getRising(),
-                // Ajouter d'autres champs si nécessaire
-            ];
-        }
-
-        $products[] = $productData;
+        $products[] = $product;
     }
+
+    $totalProducts = count($paginator);
+    $totalPages = ceil($totalProducts / $limit);
 
     $categoriesWithChildren = $this->categoryService->getTopLevelCategoriesWithChildren();
 
     return $this->render('product/index.html.twig', [
         'products' => $products,
+        'totalPages' => $totalPages,
+        'currentPage' => $page,
         'categoriesWithChildren' => $categoriesWithChildren,
+        'routeName' => 'app_products_filters', // Le nom de la route utilisée pour la pagination
+        'queryParameters' => $request->query->all(), // Tous les autres paramètres de requête
+        'pageParameterName' => 'page', // Le nom du paramètre de requête pour le numéro de la page
     ]);
 }
 

@@ -17,20 +17,11 @@ class ProductService{
     $this->requestStack = $requestStack;
   }
 
-    public function getProducts(){
+    public function getProducts($page = 1, $limit = 10){
 
-        $products = $this->productRepository->findAllProductsWithDetails();
+        $products = $this->productRepository->findAll();
 
-        $productsWithnutriScore = [];
-        
-        foreach ($products as $product) {
-        $nutriScore = $this->calculatenutriScore($product);
-    
-        $productsWithnutriScore[] = [
-            'product' => $product,
-            'nutriScore' => $nutriScore,
-        ];}
-        return $productsWithnutriScore;
+        return $products;
   }
 
 
@@ -185,10 +176,12 @@ class ProductService{
 
         $nutriScore = $this->calculatenutriScore($product);
 
-        return $productDétails = [
+        $productDétails = [
             'product' => $product,
             'nutriScore' => $nutriScore,
         ];
+
+        return $productDétails;
     }
 
     public function getProductsBycategory($category){

@@ -20,12 +20,6 @@ class ProductRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Product::class);
     }
-
-    public function filterBySort($sortOrder, $queryBuilder) {
-      $sortDirection = $sortOrder === 'ascprice' ? 'ASC' : 'DESC';
-      $queryBuilder->orderBy('p.price', $sortDirection);
-      return $queryBuilder;
-  }
   
   public function filterByCategory($categoryId, $queryBuilder) {
                     $queryBuilder                    
@@ -40,7 +34,8 @@ class ProductRepository extends ServiceEntityRepository
       ->select('p','nutrition', 'promotion')
       ->leftJoin('p.nutrition', 'nutrition')
       ->leftJoin('p.promotion', 'promotion')
-      ->andWhere('promotion.rising' <= $price)
+      ->andWhere('promotion.rising <= :price')
+      ->setParameter('price', $price)
       ->setMaxResults($limit)
       ->getQuery()
       ->getResult();
@@ -51,7 +46,7 @@ class ProductRepository extends ServiceEntityRepository
     ->select('p','nutrition', 'promotion')
     ->leftJoin('p.nutrition', 'nutrition')
     ->leftJoin('p.promotion', 'promotion')
-    ->andWhere('promotion.rising' != null)
+    ->andWhere('promotion.rising IS NOT null')
     ->setMaxResults($limit)
     ->getQuery()
     ->getResult();
@@ -69,14 +64,6 @@ class ProductRepository extends ServiceEntityRepository
 
     }
 
-    public function findAllProductsWithDetails(){
-        return $this->createQueryBuilder('p')
-                    ->select('p','nutrition', 'promotion')
-                    ->leftJoin('p.nutrition', 'nutrition')
-                    ->leftJoin('p.promotion', 'promotion')
-                    ->getQuery()
-                    ->getResult();
-    }
 
     public function findOneProductsWithDetails($id){
       return $this->createQueryBuilder('p')
@@ -99,21 +86,7 @@ class ProductRepository extends ServiceEntityRepository
         ->setParameter('category_id', $category_id)
         ->getQuery()
         ->getResult();            
-  }
-  
-  
-  public function findAllProductsWithDetailsBySubCategory($subCategory_id){
-    return $this->createQueryBuilder('p')
-                ->select('p', 'nutrition', 'promotion', 'sc')
-                ->leftJoin('p.nutrition', 'nutrition')
-                ->leftJoin('p.promotion', 'promotion')
-                ->innerJoin('p.subCategories', 'sc')
-                ->where('sc.id = :subCategory_id') 
-                ->setParameter('subCategory_id', $subCategory_id)
-                ->getQuery()
-                ->getResult();          
-  }
-  
+  }  
   
 
 //    /**
