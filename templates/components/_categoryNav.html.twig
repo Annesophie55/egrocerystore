@@ -5,7 +5,7 @@
                 <a class="nav-link dropdown-toggle text-light" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{{ item.category.name }}</a>
                 <ul class="dropdown-menu">
                     {% for child in item.children %}
-                        <li><a class="dropdown-item" href="{{ path('app_product_category', {'category_id': child.id}) }}">{{ child.name }}</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_product_category', {'category_id': item.category.id}) }}">{{ child.name }}</a></li>
                     {% endfor %}
                 </ul>
             {% else %}

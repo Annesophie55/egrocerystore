@@ -20,14 +20,6 @@ class ProductRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Product::class);
     }
-  
-  public function filterByCategory($categoryId, $queryBuilder) {
-                    $queryBuilder                    
-                    ->andWhere('c.id = :categoryId')
-                    ->setParameter('categoryId', $categoryId);
-
-                  return $queryBuilder;
-  }
 
   public function findBySmallPrice($price, $limit):array{
       return $this->createQueryBuilder('p')
@@ -87,7 +79,17 @@ class ProductRepository extends ServiceEntityRepository
         ->getQuery()
         ->getResult();            
   }  
-  
+
+
+  public function searchProducts($query)
+  {
+    return $this->createQueryBuilder('p')
+                ->where('p.name LIKE :query')
+                ->setParameter('query', '%'.$query.'%')
+                ->getQuery()
+                ->getResult();  
+  }
+
 
 //    /**
 //     * @return Product[] Returns an array of Product objects

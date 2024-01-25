@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-lg w-100">
   <div class="w-100">
     <div id="header_top_block" class="container-fluid w-100 d-flex justify-content-between">
-      {% include 'components/_searchBar.html.twig' %}
+    {{ include('components/_search.html.twig', {'action_path': path('search_user')}) }}
       <div>
         <a class="navbar-brand me-5" href="{{ path('app_home_page') }}">Vitefrais</a>
       </div>
@@ -19,13 +19,13 @@
           <ul class="dropdown-menu dropdown-menu-dark">
 
                 {% if app.user != is_granted("ROLE_ADMIN") %}   
-                      <li><a class="dropdown-item" href="#">Vos favoris</a></li>
+                      <li><a class="dropdown-item" href="{{path('app_product_favorite')}}">Vos favoris</a></li>
                       <li><a class="dropdown-item" href="{{ path('app_order_index')}}">Vos commande</a></li>
                       <li><a class="dropdown-item" href="#">Votre profil</a></li>
                       <li><hr class="dropdown-divider"></li>
                       <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se deconnecter</a></li>
                  {% elseif is_granted('ROLE_ADMIN')%}
-                      <li><a class="dropdown-item" href="#">Administration</a></li>
+                      <li><a class="dropdown-item" href="{{ path('app_dashboard') }}">Tableau de bord</a></li>
                       <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se deconnecter</a></li>
                   {% else %}
                   <li><a class="dropdown-item" href="{{ path('app_register') }}">S'inscrire</a></li>
@@ -56,16 +56,15 @@
           <path d="M5.929 1.757a.5.5 0 1 0-.858-.514L2.217 6H.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h.623l1.844 6.456A.75.75 0 0 0 3.69 15h8.622a.75.75 0 0 0 .722-.544L14.877 8h.623a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1.717L10.93 1.243a.5.5 0 1 0-.858.514L12.617 6H3.383zM4 10a1 1 0 0 1 2 0v2a1 1 0 1 1-2 0zm3 0a1 1 0 0 1 2 0v2a1 1 0 1 1-2 0zm4-1a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1"/>
           </svg>
     </a>
-       
-
-        
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
+        </button>
+
     </div>
     
 
     <div id="header_down_block" class="container-fluid w-100 d-flex flex-between">
-        </button>
+      
         <div class="collapse navbar-collapse d-flex justify-content-center" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item  me-5">
@@ -86,10 +85,7 @@
             </li>
 
             <li class="nav-item me-5">
-              <a class="nav-link" href="#">Promotions</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link">Contact</a>
+              <a class="nav-link" href="{{path('app_product_promotion')}}">Promotions</a>
             </li>
           </ul>
         </div>

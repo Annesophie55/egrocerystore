@@ -1,0 +1,52 @@
+{# templates/product/add.html.twig #}
+
+{% extends 'admin.html.twig' %}
+
+{% block title %}Ajouter un produit{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Ajouter un produit</h1>
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+        <div class="form-group">
+            {{ form_label(form.name) }}
+            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.name) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.description) }}
+            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.description) }}
+        </div>
+        <div class="form-group">
+            {{ form_row(form.imageFile) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.price) }}
+            {{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.price) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.createdAt) }}
+            {{ form_widget(form.createdAt, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.createdAt) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.categories) }}
+            {{ form_widget(form.categories, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.categories) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.promotion) }}
+            {{ form_widget(form.promotion, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.promotion) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.nutrition) }}
+            {{ form_widget(form.nutrition, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.nutrition) }}
+        </div>
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

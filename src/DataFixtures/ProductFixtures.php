@@ -19,10 +19,8 @@ class ProductFixtures extends Fixture
 
         // Récupération des catégories et sous-catégories
         $categoryRepository = $manager->getRepository(Category::class);
-        $subCategoryRepository = $manager->getRepository(SubCategory::class);
-        
+  
         $categories = $categoryRepository->findAll();
-        $subCategories = $subCategoryRepository->findAll();
 
         // Création des promotions
         for ($i = 0; $i < 200; $i++) {
@@ -45,7 +43,6 @@ class ProductFixtures extends Fixture
 
             // Association d'une catégorie, d'une sous-catégorie et d'une promotion aléatoires
             $product->addCategory($faker->randomElement($categories));
-            $product->addSubCategory($faker->randomElement($subCategories));
             // Attribution 30% de chance d'avoir une promotion
             if ($faker->boolean($chanceOfGettingTrue = 30)) { 
                 $product->setPromotion($faker->randomElement($promotions));

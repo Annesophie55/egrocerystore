@@ -15,7 +15,7 @@ class ProductFilter extends AbstractExtension
     $this->productService = $productService;
   }
 
-    public function getFilters()
+    public function getFilters():array
     {
         return [
             new TwigFilter('nutriscore', [$this, 'productNutriscore']),
@@ -24,7 +24,6 @@ class ProductFilter extends AbstractExtension
 
     public function productNutriscore(Product $product)
     {
-
         return $this->productService->calculatenutriScore($product);
     }
 }

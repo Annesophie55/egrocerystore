@@ -35,6 +35,9 @@ class Order
     #[ORM\OneToMany(mappedBy: 'orders', targetEntity: OrderItem::class)]
     private Collection $orderItems;
 
+    #[ORM\Column(length: 255)]
+    private ?string $status = null;
+
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
@@ -131,6 +134,18 @@ class Order
                 $orderItem->setOrders(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
 
         return $this;
     }

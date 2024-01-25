@@ -188,94 +188,50 @@ class ProductService{
 
         $products = $this->productRepository->findAllProductsWithDetailsByCategory($category);
 
-        $productsWithnutriScore = [];
-        
-        foreach ($products as $product) {
-        $nutriScore = $this->calculatenutriScore($product);
-    
-        $productsWithnutriScore[] = [
-            'product' => $product,
-            'nutriScore' => $nutriScore,
-        ];}
-
-        return $productsWithnutriScore;
+        return $products;
 
     }
 
     public function getFavoritesProducts($user){
 
         // Récupération des favoris de l'utilisateur
-        $favorites = $user->getFavorite()->toArray();
+        $favorites = $user->getFavorite();
         
-                    // Transformation des favoris en tableau avec les données nécessaires pour l'affichage
-                    $favoritesData = array_map(function ($favoriteProduct) {
-                        // Assurez-vous que $favoriteProduct est un objet Product
-                        return [
-                            'product' => $favoriteProduct,
-                            'promotion' => $favoriteProduct->getPromotion(),
-                            'nutriScore' => $this->calculateNutriScore($favoriteProduct),
-                        ];
-                    }, $favorites);
-            return $favoritesData;
+            return $favorites;
         }
 
-    public function getBoughtProduct($user){
-         // Récupération des commandes et des produits achetés
-         $orders = $user->getOrder(); 
-         $ordersArray = $orders->toArray();
-     
-         $buyProductsData = [];
-
-         if ($ordersArray) {
-
-             foreach ($ordersArray as $order) {
-
-                 $orderItems = $order->getOrderItems();
-
-                 foreach ($orderItems as $orderItem) {
-
-                     $product = $orderItem->getProduct();
-
-                     if ($product) {
-                         $buyProductsData[] = [
-                             'product' => $product,
-                             'promotion' => $product->getPromotion(),
-                             'nutriScore' => $this->calculateNutriScore($product),
-                         ];
-                     }
-                 }
-             }
-         }
-        return $buyProductsData;
-    }
+        public function getBoughtProduct($user){
+            // Récupération des commandes et des produits achetés
+            $orders = $user->getOrder();
+            $ordersArray = $orders->toArray();       
+            $boughtProductsData = [];
+        
+            if ($ordersArray) {
+                foreach ($ordersArray as $order) {
+                    $orderItems = $order->getOrderItems();
+                    foreach ($orderItems as $orderItem) {
+    
+                        $product = $orderItem->getProduct();
+                        if ($product) {
+                            $boughtProductsData[] = $product;
+                        }
+                    }
+                }
+            }
+        
+            return $boughtProductsData;
+        }
 
     public function getSmallPrice(){
     $products = $this->productRepository->findBySmallPrice(12, 12);
-    $productsWithnutriScore = [];
-        
-    foreach ($products as $product) {
-    $nutriScore = $this->calculatenutriScore($product);
 
-    $productsWithnutriScore[] = [
-        'product' => $product,
-        'nutriScore' => $nutriScore,
-    ];}
-
-    return $productsWithnutriScore;
+    return $products;
     }
 
-    public function getByPromotion(){
-        $products = $this->productRepository->findByPromotion(4);
-        $productsWithnutriScore = [];
-        
-        foreach ($products as $product) {
-        $nutriScore = $this->calculatenutriScore($product);
-    
-        $productsWithnutriScore[] = [
-            'product' => $product,
-            'nutriScore' => $nutriScore,
-        ];}
-    
-        return $productsWithnutriScore;
+    public function getByPromotion($limit){
+
+        $products = $this->productRepository->findByPromotion($limit);  
+
+        return $products;
     }
 }

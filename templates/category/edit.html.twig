@@ -1,0 +1,16 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}Edit Category{% endblock %}
+
+{% block body %}
+    <h1>Modifier une catégorie</h1>
+
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    {{ form_widget(form) }}
+    <div class="form-group">
+        <a href="{{ path('app_category_index') }}" class="btn btn-secondary">Back to list</a>
+        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

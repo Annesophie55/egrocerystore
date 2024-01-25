@@ -27,7 +27,7 @@ class HomePageController extends AbstractController
     }
 
     #[Route('/', name: 'app_home_page')]
-    public function index(ProductService $productService, CategoryService $categoryService, ProductRepository $productRepository): Response
+    public function index(ProductService $productService): Response
     {
         //Vérifie si un utilisateur est connécté
         $user = $this->getUser();
@@ -40,17 +40,15 @@ class HomePageController extends AbstractController
         $smallPriceProducts = [];
         $promotionProducts = [];        
 
-        if ($user) {
+        if ($user && count($productService->getFavoritesProducts($user)) >= 1 && count($productService->getBoughtProduct($user)) >= 1) {
             $favoritesProducts = $productService->getFavoritesProducts($user);
             $boughtProducts = $productService->getBoughtProduct($user);
             $boughtProducts = array_slice($boughtProducts, 0, 8);
         }
         else{
             $smallPriceProducts = $productService->getSmallPrice();
-            $promotionProducts = $productService->getByPromotion();
+            $promotionProducts = $productService->getByPromotion(8);
         }
-
-
 
         return $this->render('home_page/index.html.twig', [
             'newProducts' => $newProducts,
@@ -86,7 +84,6 @@ class HomePageController extends AbstractController
 
         $status = $this->json(['status' => $status]);
 
-        // Retourne un statut JSON indiquant le succès ou l'échec
         return $status;
     }
 }

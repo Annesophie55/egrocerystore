@@ -75,27 +75,27 @@ class CartController extends AbstractController
         $user = $this->getUser();
         if (!$user) {
             return $this->redirectToRoute('app_login');
-        }
-    
-        // Récupérer les informations du panier en session.
+        }    
+        // Récupération des informations du panier en session.
         $cart = $this->cartService->getCart();
         if (empty($cart)) {
             $this->addFlash('error', 'Votre panier est vide.');
             return $this->redirectToRoute('app_cart');
         }
     
-        // Récupérer le choix de retrait de la commande.
+        // Récupération du choix de retrait de la commande.
         $deliveryChoice = $request->request->get('deliveryOption');
     
-        // Créer la commande.
+        // Création la commande.
         $order = new Order();
         $order->setUser($user);
         $order->setCreatedAt(new DateTimeImmutable());
         $order->setWithdrawalChoice($deliveryChoice);
+        $order->setStatus('Validé');
         $order->setTotalPrice($this->cartService->getCartTotal());
         $order->setQuantity($this->cartService->getCartQuantity());
         
-        // Créer les lignes de commande (OrderItem) pour chaque produit dans le panier.
+        // Création des lignes de commande pour chaque produit dans le panier.
         foreach ($cart as $productId => $details) {
             $product = $this->productRepository->find($productId);
             if ($product) {
@@ -109,11 +109,11 @@ class CartController extends AbstractController
                 $this->entityManager->persist($orderItem);
             }
         }
-        
+       
         $this->entityManager->persist($order);
         $this->entityManager->flush();
     
-        // Vider le panier en session après la validation de la commande.
+        // Vide le panier en session après la validation de la commande.
         $this->cartService->emptyCart();
     
         $this->addFlash('success', 'Votre commande a été validée avec succès !');

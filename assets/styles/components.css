@@ -62,3 +62,14 @@
   fill: yellow;
 }
 
+#productCard{
+  height: 380px;
+  width: 180px;
+}
+ #productImg{
+  height: 120px;
+  width: 100px;
+  margin: auto;
+ }
+
+

@@ -1,0 +1,16 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}New Category{% endblock %}
+
+{% block body %}
+    <h1>Créer une nouvelle catégorie</h1>
+
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    {{ form_widget(form) }}
+    <div class="form-group">
+        <a href="{{ path('app_category_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        <button type="submit" class="btn btn-success">Créer</button>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}

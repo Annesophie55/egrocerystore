@@ -3,10 +3,6 @@
 .navbar{
   background-color: rgba(151, 248, 190, 1);
 }
-#navbar-logo-block{
-  margin-right: 15px;
-  margin-top: 10px;
-}
 
 /* LOGO */
 
@@ -26,22 +22,23 @@
 .dropdown-menu{
   position: absolute !important;
   margin-left: auto !important;
+  z-index: 2000;
 }
 
 /* Styles de base pour le formulaire de connexion */
 .form-signin {
-  background-color: #ffffff; /* ou une autre couleur de fond qui correspond à votre palette */
+  background-color: #ffffff; 
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  max-width: 350px; /* ou la largeur que vous préférez */
+  max-width: 350px; 
 }
 
 /* En-tête du formulaire de connexion */
 .form-signin h1 {
   font-size: 24px;
   margin-bottom: 15px;
-  color: #333333; /* ou la couleur de votre choix */
+  color: #333333; 
   font-weight: normal;
   text-align: center;
 }
@@ -61,21 +58,21 @@
   padding: 10px;
   border: none;
   border-radius: 5px;
-  background-color: #007bff; /* ou la couleur principale de votre site */
+  background-color: #007bff; 
   color: white;
-  margin-top: 10px; /* ajustez l'espacement au-dessus du bouton si nécessaire */
+  margin-top: 10px; 
   font-size: 18px;
 }
 
-/* Personnalisation pour un petit texte ou des liens supplémentaires */
+
 .form-signin .additional-text {
   text-align: center;
   margin-top: 15px;
 }
 
-/* Lien pour l'inscription ou la récupération du mot de passe */
+
 .form-signin a {
-  color: #007bff; /* ou la couleur de lien de votre choix */
+  color: #007bff;
   text-decoration: none;
 }
 
@@ -83,7 +80,31 @@
   text-decoration: underline;
 }
 
-/* Ajout d'un peu d'espace autour du formulaire pour qu'il ne colle pas aux bords du menu déroulant */
+
 .dropdown-menu {
   padding: 10px;
+}
+
+
+.footer {
+  background-color: rgba(151, 248, 190, 1);
+  color: white; 
+  padding: 20px; 
+  width: 100vw;
+}
+.footer .container {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+}
+.footer h1 {
+  font-size: 32px; 
+  margin: 0;
+  letter-spacing: 0.05em; 
+
+}
+
+
+@media screen and (max-width: 1000px) {
+  
 }

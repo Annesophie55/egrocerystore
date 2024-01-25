@@ -10,7 +10,6 @@
             <h2 class="mb-4">Détails de la commande #{{ order.id }}</h2>
             <div class="table-responsive">
                 <table class="table table-bordered">
-                <table class="table table-bordered">
                     <thead class="thead-light">
                         <tr>
                             <th>Produit</th>
@@ -29,7 +28,6 @@
                         </tr>
                         {% endfor %}
                     </tbody>
-                </table>
                 </table>
             </div>
             <a href="{{ path('app_order_index') }}" class="btn btn-secondary mt-2">Retour à la liste</a>
