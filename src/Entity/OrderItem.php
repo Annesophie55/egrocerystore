@@ -28,9 +28,6 @@ class OrderItem
     #[ORM\Column(length: 25)]
     private ?string $status = null;
 
-    #[ORM\Column(length: 25, nullable:true)]
-    private ?string $withdrawal_choice = null;
-
     #[ORM\ManyToOne(inversedBy: 'orderItems')]
     private ?Product $product = null;
 
@@ -87,18 +84,6 @@ class OrderItem
     public function setStatus(string $status): static
     {
         $this->status = $status;
-
-        return $this;
-    }
-
-    public function getWithdrawalChoice(): ?string
-    {
-        return $this->withdrawal_choice;
-    }
-
-    public function setWithdrawalChoice(?string $withdrawal_choice): static
-    {
-        $this->withdrawal_choice = $withdrawal_choice;
 
         return $this;
     }

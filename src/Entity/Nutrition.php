@@ -151,7 +151,6 @@ class Nutrition
 
     public function setProduct(Product $product): static
     {
-        // set the owning side of the relation if necessary
         if ($product->getNutrition() !== $this) {
             $product->setNutrition($this);
         }

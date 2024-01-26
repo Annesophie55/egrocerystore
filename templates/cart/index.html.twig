@@ -1,7 +1,29 @@
 {% extends 'base.html.twig' %}
 
+
 {% block body %}
+
 <div class="container mt-4 mb-4 w-100">
+{% if stockIssues is defined and stockIssues is not empty %}
+    <div class="alert alert-danger">
+        <ul>
+            {% for issue in stockIssues %}
+                <li>
+                    {{ issue.productName }} : seulement {{ issue.available }} disponible(s),
+                    vous avez demandé {{ issue.requested }}.
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+{% if products|length == 0 %}
+    <div class="alert alert-danger">
+        Votre panier est vide
+    </div>
+{% endif %}
+
+    
     <div class="row">
         <div class="col-md-8">
             <h2 class="text-black">Votre Panier</h2>
@@ -19,7 +41,13 @@
                     <tr>
                         <td>{{ product.product.name }}</td>
                         <td>{{ product.product.price | number_format(2, '.', ',') }} €</td>
-                        <td>{{ product.quantity }}</td>
+                        <td>
+                            <form action="{{ path('app_update_cart', {'productId': product.product.id}) }}" method="post">
+                                <button type="submit" name="action" value="decrease" class="btn btn-sm btn-outline-secondary">-</button>
+                                {{ product.quantity }}
+                                <button type="submit" name="action" value="increase" class="btn btn-sm btn-outline-secondary">+</button>
+                            </form>
+                        </td>  
                         <td>{{ (product.product.price * product.quantity) | number_format(2, '.', ',') }} €</td>
                     </tr>
                     {% endfor %}

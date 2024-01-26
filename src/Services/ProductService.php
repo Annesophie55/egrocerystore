@@ -31,14 +31,14 @@ class ProductService{
         $nutrition = $product->getNutrition();
 
         if (!$nutrition) {
-            return null; // Ou 'Non disponible', ou toute autre valeur par défaut
+            return null; 
         }
 
         // verification de la récupération
         if($nutrition){
         $energy = $nutrition->getEnergy();
 
-        // conversion de l'ernergie en kilocalories
+        // conversion de l'énergie en kilocalories
         $kilocalories = $energy *  0.239;
 
         // récupération des valeurs nutritionnelles des différents composant du produit
@@ -144,9 +144,6 @@ class ProductService{
         }else{
             $nutriScore = 'E';
         }
-        }
-        else{
-        // gérer les erreurs avec addflash message
         }
 
         return $nutriScore;

@@ -85,7 +85,6 @@ class Category
     public function removeChild(self $child): self
     {
         if ($this->children->removeElement($child)) {
-            // set the owning side to null (unless already changed)
             if ($child->getParent() === $this) {
                 $child->setParent(null);
             }

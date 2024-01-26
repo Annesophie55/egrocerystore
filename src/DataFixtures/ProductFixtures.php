@@ -36,6 +36,7 @@ class ProductFixtures extends Fixture
             $product->setName($faker->words(3, true)); 
             $product->setDescription($faker->sentence);
             $product->setPrice($faker->randomFloat(2, 1, 100));
+            $product->setQuantity($faker->numberBetween(5, 50));
             $product->setImage('images/chocolate.jpg'); 
             $product->setCreatedAt(new \DateTimeImmutable($faker->dateTimeBetween('-1 year', 'now')->format('Y-m-d H:i:s')));
 

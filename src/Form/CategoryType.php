@@ -22,8 +22,8 @@ class CategoryType extends AbstractType
         ->add('parent', EntityType::class, [
             'class' => Category::class,
             'choice_label' => 'name',
-            'placeholder' => 'Aucun parent', // Ceci ajoute une option vide avec le texte 'Aucun parent'
-            'required' => false, // Rend ce champ non obligatoire
+            'placeholder' => 'Aucun parent', 
+            'required' => false, 
             'attr' => ['class' => 'form-select'],
         ]);
     }

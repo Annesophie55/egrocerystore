@@ -6,6 +6,7 @@ use App\Entity\Order;
 use App\Entity\OrderItem;
 use Symfony\Component\Mime\Email;
 use App\Repository\OrderItemRepository;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
@@ -34,6 +35,16 @@ class DashboardController extends AbstractController
         ]);
         return $this->render('dashboard/index.html.twig', [
             'orderItems' => $orderItems,
+        ]);
+    }
+
+    #[Route('/stock', name: 'app_dashboard_stock', methods:'GET')]
+    public function lowStock(ProductRepository $productRepository): Response
+    {
+        $products = $productRepository->findLowStockProducts(15);
+
+        return $this->render('dashboard/stock.html.twig', [
+            'products' => $products,
         ]);
     }
 
@@ -79,4 +90,6 @@ class DashboardController extends AbstractController
 
             return $this->redirectToRoute('app_dashboard');
             }
+
+    
 }

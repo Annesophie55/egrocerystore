@@ -1,7 +1,5 @@
 <?php
 
-// src/Controller/HomePageController.php
-
 namespace App\Controller;
 
 use App\Entity\Product;
@@ -71,11 +69,9 @@ class HomePageController extends AbstractController
 
         // Vérifie si le produit est déjà un favori de l'utilisateur
         if ($user->getFavorite()->contains($product)) {
-            // Si oui, le retirer des favoris
             $user->removeFavorite($product);
             $status = 'removed';
         } else {
-            // Si non, l'ajouter aux favoris
             $user->addFavorite($product);
             $status = 'added';
         }

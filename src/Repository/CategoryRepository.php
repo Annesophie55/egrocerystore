@@ -24,7 +24,7 @@ class CategoryRepository extends ServiceEntityRepository
     public function findTopLevelCategories()
 {
     return $this->createQueryBuilder('c')
-        ->andWhere('c.parent IS NULL') // Assurez-vous que la colonne pour la catégorie parente est correcte
+        ->andWhere('c.parent IS NULL') 
         ->getQuery()
         ->getResult();
 }

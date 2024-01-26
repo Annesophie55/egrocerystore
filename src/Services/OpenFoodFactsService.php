@@ -37,7 +37,6 @@ class OpenFoodFactsService{
     $response = $this->client->request('GET', "https://world.openfoodfacts.org/categories.json");
     $data = $response->toArray();
     
-    // La structure de réponse exacte devra être vérifiée, mais généralement, vous aurez besoin de quelque chose comme ceci:
     return $data['tags'] ?? [];
   }
 
@@ -58,14 +57,12 @@ class OpenFoodFactsService{
   }
 
 
-  // Dans votre service OpenFoodFactsService
 
 public function fetchProductsByCategory(string $category, int $numberOfProducts = 10): array {
   $response = $this->client->request('GET', "https://world.openfoodfacts.org/category/$category/$numberOfProducts.json");
   return $response->toArray();
 }
 
-// Utilisez cette nouvelle méthode pour obtenir des produits pour différentes catégories
 public function importProductsFromCategories(array $categories): void {
   foreach ($categories as $category) {
       try {
@@ -77,7 +74,7 @@ public function importProductsFromCategories(array $categories): void {
               }
           }
       } catch (\Exception $exception) {
-          // Gérer l'exception, par exemple en journalisant une erreur
+
       }
   }
 }
