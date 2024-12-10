@@ -65,11 +65,12 @@
 #productCard{
   height: 380px;
   width: 180px;
+  padding-top: 5px;
 }
  #productImg{
   height: 120px;
-  width: 100px;
-  margin: auto;
+  width: 120px;
+  margin: 5px auto 0px auto ;
  }
 
 

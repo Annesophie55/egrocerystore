@@ -1,6 +1,7 @@
 
 <div class="card p-0 h-100" id="productCard">
-    <img src="{{ asset(product.image) }}" class="card-img-top" id="productImg" alt="{{ product.name }}">
+    <img src="{{ asset(product.image ~ 'jpg') }}" class="card-img-top" id="productImg" alt="{{ product.name }}">
+
     <div class="card-body">
     <h5 class="card-title">{{ product.name }}</h5> 
     <p class="card-text">Prix {{ product.price | number_format(2, '.', ',') }} €</p>   
