@@ -89,16 +89,19 @@ class ProductController extends AbstractController
     }
 
     #[Route('/category/{category_id}', name: 'app_product_category', methods: 'GET')]
-    public function productByCategory($category_id, CategoryRepository $categoryRepository)
+    public function productByCategory($category_id, CategoryRepository $categoryRepository, ProductService $productService)
     {
         $category = $categoryRepository->find(['id'=>$category_id]);
 
         $products = $this->productService->getProductsBycategory($category_id);
 
+        $productInPromotionForCarousel = $productService->getByPromotion(6);
+
 
         return $this->render('product/index.html.twig', [
             'products' => $products,
-            'category' => $category
+            'category' => $category,
+            'productInPromotionForCarousel' => $productInPromotionForCarousel
         ]);
     }
 

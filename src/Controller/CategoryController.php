@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
+use App\Services\CategoryService;
+use App\Services\ProductService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,10 +45,12 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_category_show', methods: ['GET'])]
-    public function show(Category $category): Response
+    public function show(Category $category, ProductService $productService): Response
     {
+        $productInPromotionForCarousel = $productService->getByPromotion(6);
         return $this->render('category/show.html.twig', [
             'category' => $category,
+            'productInPromotionForCarousel' => $productInPromotionForCarousel
         ]);
     }
 
@@ -80,9 +84,9 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/category/header', name: 'category_header')]
-    public function categoryInHeader(): Response
+    public function categoryInHeader(CategoryService $categoryService): Response
     {
-        $categoriesWithChildren = $this->categoryService->getTopLevelCategoriesWithChildren();
+        $categoriesWithChildren = $categoryService->getTopLevelCategoriesWithChildren();
 
         return $this->render('partials/_header.html.twig', [
             'categoriesWithChildren' => $categoriesWithChildren,
@@ -90,9 +94,9 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/category/nav', name: 'category_nav')]
-    public function categoryInNav(): Response
+    public function categoryInNav(CategoryService $categoryService): Response
     {
-        $categoriesWithChildren = $this->categoryService->getTopLevelCategoriesWithChildren();
+        $categoriesWithChildren = $categoryService->getTopLevelCategoriesWithChildren();
 
         return $this->render('components/_categoryNav.html.twig', [
             'categoriesWithChildren' => $categoriesWithChildren,

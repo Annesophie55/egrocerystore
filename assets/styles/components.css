@@ -21,20 +21,6 @@
   z-index: 2;
 }
 
-#brandString{
-  position: absolute;
-  width: auto;
-  padding: 7px;
-  border-radius: 5px;
-  z-index: 1;
-  background-color: rgba(151, 248, 190, 1);
-  top: 50px;
-  left: 70px;
-  font-family: 'Lato';
-  font-weight: 400;
-  font-size: 30px;
-}
-
 #btnAllPromos{
   position: absolute;
   z-index: 1;
@@ -74,3 +60,74 @@
  }
 
 
+/* Carousel */
+/* Conteneur principal */
+.carousel {
+  position: relative;
+  background: rgb(8,67,224);
+  background: linear-gradient(212deg, rgba(8,67,224,1) 30%, rgba(90,63,223,0.9831168356906163) 48%, rgba(44,186,205,1) 78%);
+  width: 100%;
+  height: 80vh;
+  margin: 0;
+  overflow: hidden;
+}
+
+.carousel-content {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* Diapositives */
+.carousel-slide {
+  display: none;
+  text-align: center;
+}
+
+.carousel-slide.active {
+  display: block;
+}
+
+/* Images des produits */
+.product-images {
+  position: relative;
+  display: flex;
+}
+
+.product-image {
+  position: relative;
+  max-width: 300px;
+  border-radius: 5px;
+  left: 15%;
+  top: 20px;
+}
+
+/* Contrôles */
+.carousel-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  font-size: 24px;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+#prevBtn {
+  left: 10px;
+}
+
+#nextBtn {
+  right: 10px;
+}
+
+.promoInfos {
+  text-align: center;
+  width: 600px;
+  background-color: chartreuse;
+  border-radius: 15px;
+}
+/* Carousel */

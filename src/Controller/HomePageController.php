@@ -7,6 +7,7 @@ use Psr\Log\LoggerInterface;
 use App\Services\ProductService;
 use App\Repository\ProductRepository;
 use App\Services\CategoryService;
+use App\Services\PromotionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +26,7 @@ class HomePageController extends AbstractController
     }
 
     #[Route('/', name: 'app_home_page')]
-    public function index(ProductService $productService): Response
+    public function index(ProductService $productService, PromotionService $promotionService): Response
     {
         //Vérifie si un utilisateur est connécté
         $user = $this->getUser();
@@ -36,16 +37,21 @@ class HomePageController extends AbstractController
         $favoritesProducts = [];
         $boughtProducts = [];
         $smallPriceProducts = [];
-        $promotionProducts = [];        
+        $promotionProducts = [];  
+        
+        
+        $productInPromotionForCarousel = $productService->getByPromotion(6);
 
-        if ($user && count($productService->getFavoritesProducts($user)) >= 1 && count($productService->getBoughtProduct($user)) >= 1) {
+        if ($user && count($productService->getFavoritesProducts($user)) >= 1) {
             $favoritesProducts = $productService->getFavoritesProducts($user);
+        }
+        if ($user && count($productService->getBoughtProduct($user)) >= 1) {
             $boughtProducts = $productService->getBoughtProduct($user);
             $boughtProducts = array_slice($boughtProducts, 0, 8);
         }
         else{
             $smallPriceProducts = $productService->getSmallPrice();
-            $promotionProducts = $productService->getByPromotion(8);
+            $promotionProducts = $promotionService->getPromotionsForProducts();
         }
 
         return $this->render('home_page/index.html.twig', [
@@ -53,13 +59,14 @@ class HomePageController extends AbstractController
             'favoritesProducts' => $favoritesProducts,
             'boughtProducts' => $boughtProducts,
             'smallPriceProducts' => $smallPriceProducts,
-            'promotionProducts' => $promotionProducts,
+            'productInPromotionForCarousel' => $productInPromotionForCarousel,
+            'promotionProducts' => $promotionProducts
         ]);
  
     }
 
     #[Route('/profil/favorite/toggle/{id}', name: 'toggle_favorite', methods:'POST')]
-    public function toggleFavorite(Product $product): Response
+    public function toggleFavorite(Product $product, ProductService $productService ): Response
     {
         $user = $this->getUser();
 
@@ -68,11 +75,11 @@ class HomePageController extends AbstractController
         }
 
         // Vérifie si le produit est déjà un favori de l'utilisateur
-        if ($user->getFavorite()->contains($product)) {
-            $user->removeFavorite($product);
+        if ($productService->getFavoritesProducts($user)->contains($product)) {
+            $productService->removeFavoriteProduct($user, $product);
             $status = 'removed';
         } else {
-            $user->addFavorite($product);
+            $productService->addFavoriteProduct($user, $product);
             $status = 'added';
         }
 

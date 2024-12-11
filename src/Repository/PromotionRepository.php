@@ -21,6 +21,27 @@ class PromotionRepository extends ServiceEntityRepository
         parent::__construct($registry, Promotion::class);
     }
 
+    public function findActivateForCarousel(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.isActive = :active')
+            ->setParameter('active', true)
+            ->setMaxResults(5)
+            ->orderBy('p.startDate', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findActivateForProducts(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.isActive = :active')
+            ->setParameter('active', true)
+            ->orderBy('p.endDate', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Promotion[] Returns an array of Promotion objects
 //     */

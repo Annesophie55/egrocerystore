@@ -23,10 +23,7 @@ class ProductRepository extends ServiceEntityRepository
 
   public function findBySmallPrice($price, $limit):array{
       return $this->createQueryBuilder('p')
-      ->select('p','nutrition', 'promotion')
-      ->leftJoin('p.nutrition', 'nutrition')
-      ->leftJoin('p.promotion', 'promotion')
-      ->andWhere('promotion.rising <= :price')
+      ->andWhere('p.price <= :price')
       ->setParameter('price', $price)
       ->setMaxResults($limit)
       ->getQuery()

@@ -5,7 +5,7 @@
 
 {% block body %}
     {% include 'components/_carrouselPromo.html.twig' %}
-           {{ render(controller('App\\Controller\\ComponentsController::categoryInNav')) }}
+    {{ render(controller('App\\Controller\\ComponentsController::categoryInNav')) }}
 
     <div class="container-fluid" id="sectionNewProduct">
         <div class="row g gx-2 gy-2">
@@ -35,13 +35,13 @@
                 {% else %}
             <div class="col-12 col-lg-4 col-md-4">
                 <h1>Promotions</h1>
-                <div class="row">
-                {% for product in promotionProducts %}
+                {# <div class="row">
+                {% for productInProm in promotionProducts %}
                     <div class="col-12 col-lg-6 col-md-6">
-                        {% include 'components/_productCard.html.twig' with { 'product': product } %}
+                        {% include 'components/_productCard.html.twig' with { 'product': productInProm } %}
                     </div>
                 {% endfor %}
-                </div>                  
+                </div>                   #}
                 {% endif %}
             </div>
             <div>

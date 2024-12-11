@@ -1,25 +1,59 @@
-
-
-<div id="carouselExample" class="carousel slide">
-  <div id="brandString">L'épicerie en ligne qui vous facilite la vie</div>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="{{ asset('images/th.jpg')}}" class="d-block w-100" alt="...">
-    </div>
-    <div class="carousel-item active">
-      <img src="{{ asset('images/promo2.jpg')}}" class="d-block w-100" alt="...">
-    </div>
-    <div class="carousel-item active">
-      <img src="{{ asset('images/promo3.jpg')}}" class="d-block w-100" alt="...">
+<div id="carousel" class="carousel">
+  <!-- Diapositive 1 -->
+  {% for product in productInPromotionForCarousel %}
+  <div class="carousel-slide">
+    <div class="carousel-content">
+      <!-- Images des produits associés -->
+      <div class="product-images">
+        <img src="{{ asset(product.image ~ 'jpg') }}" alt="{{ product.name ?: 'Produit sans nom' }}" class="product-image">
+      </div>
+      
+      <!-- Informations sur la promotion -->
+      <div class="promoInfos">
+        <h3 class="promoName">{{ product.promotion.name }}</h3>
+        <p class="promoDescription">{{ product.promotion.description }}</p>
+        <p class="promoRising">Réduction : {{ product.promotion.rising }} {{ product.promotion.discountType == 'percentage' ? '%' : '€' }}</p>
+        <p class="promoDates">Du {{ product.promotion.startDate|date('d/m/Y') }} au {{ product.promotion.endDate|date('d/m/Y') }}</p>
+      </div>
     </div>
   </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-        <a href="{{ path('app_product_promotion')}}" class="btn btn-warning text-success" id="btnAllPromos">Afficher toutes les promotions</a>
+  {% endfor %}
+  <!-- Boutons pour naviguer -->
+  <button id="prevBtn" class="carousel-control">❮</button>
+  <button id="nextBtn" class="carousel-control">❯</button>
 </div>
+
+
+<script>
+// Sélection des éléments du DOM
+const slides = document.querySelectorAll('.carousel-slide');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+let currentSlide = 0;
+
+// Fonction pour afficher la diapositive active
+function showSlide(index) {
+  slides.forEach((slide, i) => {
+    slide.classList.remove('active');
+    if (i === index) {
+      slide.classList.add('active');
+    }
+  });
+}
+
+// Navigation vers la diapositive précédente
+prevBtn.addEventListener('click', () => {
+  currentSlide = (currentSlide === 0) ? slides.length - 1 : currentSlide - 1;
+  showSlide(currentSlide);
+});
+
+// Navigation vers la diapositive suivante
+nextBtn.addEventListener('click', () => {
+  currentSlide = (currentSlide === slides.length - 1) ? 0 : currentSlide + 1;
+  showSlide(currentSlide);
+});
+
+// Afficher la première diapositive par défaut
+showSlide(currentSlide);
+</script>

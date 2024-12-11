@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\PromotionRepository;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -12,24 +11,32 @@ use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: PromotionRepository::class)]
 #[Broadcast]
+#[ORM\HasLifecycleCallbacks]
 class Promotion
 {
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function onPersistOrUpdate(): void
+    {
+        $this->updateIsActive();
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length:50)]
+    #[ORM\Column(length: 50)]
     private ?string $name = null;
 
-    #[ORM\Column(length:255)]
+    #[ORM\Column(length: 255)]
     private ?string $description = null;
 
-    #[ORM\Column(length:10)]
-    private ?string $discountType;
+    #[ORM\Column(length: 10)]
+    private ?string $discountType = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2)]
-    private ?string $rising = null;
+    private ?float $rising = null;
 
     #[ORM\OneToMany(mappedBy: 'promotion', targetEntity: Product::class)]
     private Collection $products;
@@ -41,7 +48,10 @@ class Promotion
     private ?\DateTimeImmutable $endDate = null;
 
     #[ORM\Column(type: 'boolean')]
-    private bool $isActive;
+    private bool $isActive = false;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isManualOverride = false;
 
     public function __construct()
     {
@@ -58,46 +68,42 @@ class Promotion
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this; 
+        return $this;
     }
 
-    public function getDescription(string $description): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
-
         return $this;
     }
 
-    public function getDiscountType(): string
+    public function getDiscountType(): ?string
     {
         return $this->discountType;
     }
 
-    public function setDiscountType(string $discountType): static
+    public function setDiscountType(?string $discountType): self
     {
         $this->discountType = $discountType;
-
         return $this;
     }
 
-    public function getRising(): ?string
+    public function getRising(): ?float
     {
         return $this->rising;
     }
 
-    public function setRising(string $rising): static
+    public function setRising(?float $rising): self
     {
         $this->rising = $rising;
-
         return $this;
     }
 
@@ -109,7 +115,7 @@ class Promotion
         return $this->products;
     }
 
-    public function addProduct(Product $product): static
+    public function addProduct(Product $product): self
     {
         if (!$this->products->contains($product)) {
             $this->products->add($product);
@@ -119,7 +125,7 @@ class Promotion
         return $this;
     }
 
-    public function removeProduct(Product $product): static
+    public function removeProduct(Product $product): self
     {
         if ($this->products->removeElement($product)) {
             if ($product->getPromotion() === $this) {
@@ -135,7 +141,7 @@ class Promotion
         return $this->startDate;
     }
 
-    public function setStartDate(\DateTimeImmutable $startDate): static
+    public function setStartDate(\DateTimeImmutable $startDate): self
     {
         $this->startDate = $startDate;
         return $this;
@@ -146,7 +152,7 @@ class Promotion
         return $this->endDate;
     }
 
-    public function setEndDate(\DateTimeImmutable $endDate): static
+    public function setEndDate(\DateTimeImmutable $endDate): self
     {
         $this->endDate = $endDate;
         return $this;
@@ -163,4 +169,48 @@ class Promotion
         return $this;
     }
 
+    public function getIsManualOverride(): bool
+    {
+        return $this->isManualOverride;
+    }
+
+    public function setIsManualOverride(bool $isManualOverride): self
+    {
+        $this->isManualOverride = $isManualOverride;
+        return $this;
+    }
+
+    public function updateIsActive(): void
+    {
+        $now = new \DateTimeImmutable();
+
+        if ($this->isManualOverride) {
+            return;
+        }
+
+        $this->isActive = $this->startDate <= $now && $this->endDate >= $now;
+    }
+
+    public function activateManually(): void
+    {
+        $this->isManualOverride = true;
+        $this->isActive = true;
+    }
+
+    public function deactivateManually(): void
+    {
+        $this->isManualOverride = true;
+        $this->isActive = false;
+    }
+
+    public function isCurrentlyActive(): bool
+    {
+        if ($this->isManualOverride) {
+            return $this->isActive;
+        }
+
+        $now = new \DateTimeImmutable();
+
+        return $this->startDate <= $now && $this->endDate >= $now;
+    }
 }

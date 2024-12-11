@@ -189,38 +189,52 @@ class ProductService{
 
     }
 
-    public function getFavoritesProducts($user){
+    public function getFavoritesProducts($user)
+    {
 
         // Récupération des favoris de l'utilisateur
         $favorites = $user->getFavorite();
-        
-            return $favorites;
-        }
-
-        public function getBoughtProduct($user){
-            // Récupération des commandes et des produits achetés
-            $orders = $user->getOrder();
-            $ordersArray = $orders->toArray();       
-            $boughtProductsData = [];
-        
-            if ($ordersArray) {
-                foreach ($ordersArray as $order) {
-                    $orderItems = $order->getOrderItems();
-                    foreach ($orderItems as $orderItem) {
     
-                        $product = $orderItem->getProduct();
-                        if ($product) {
-                            $boughtProductsData[] = $product;
-                        }
+        return $favorites;
+    }
+
+    public function addFavoriteProduct($user, $product)
+    {
+        $newfavorite = $user->addFavorite($product);
+        return $newfavorite;
+    }
+
+    public function removeFavoriteProduct($user, $product)
+    {
+        $deletedProduct = $user->removeFavorite($product);
+        return $deletedProduct;
+    }
+
+    public function getBoughtProduct($user){
+        // Récupération des commandes et des produits achetés
+        $orders = $user->getOrder();
+        $ordersArray = $orders->toArray();       
+        $boughtProductsData = [];
+        
+        if ($ordersArray) {
+            foreach ($ordersArray as $order) {
+                $orderItems = $order->getOrderItems();
+                foreach ($orderItems as $orderItem) {
+    
+                    $product = $orderItem->getProduct();
+                    if ($product) {
+                        $boughtProductsData[] = $product;
                     }
                 }
             }
-        
-            return $boughtProductsData;
         }
+        
+        return $boughtProductsData;
+    }
 
     public function getSmallPrice(){
-    $products = $this->productRepository->findBySmallPrice(12, 12);
+
+    $products = $this->productRepository->findBySmallPrice(3, 6);
 
     return $products;
     }
