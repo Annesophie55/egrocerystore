@@ -151,7 +151,7 @@ class ProductService{
 
     public function getRecentlyProduct(){
 
-        $products = $this->productRepository->findByRecentlyDate(16);
+        $products = $this->productRepository->findByRecentlyDate(9);
 
         $productsWithnutriScore = [];
         
@@ -234,7 +234,7 @@ class ProductService{
 
     public function getSmallPrice(){
 
-    $products = $this->productRepository->findBySmallPrice(3, 6);
+    $products = $this->productRepository->findBySmallPrice(3, 4);
 
     return $products;
     }

@@ -10,12 +10,18 @@ import './styles/app.css';
 import './styles/partials.css'
 
 import './styles/components/components.css'
-
 import './styles/components/cartBadge.css'
-
 import './styles/components/userDropdown.css'
+import './styles/components/categoryNav.css'
+import './styles/components/productCard.css'
+import './styles/components/carousel.css'
+
 
 import './styles/detailsCard.css'
+
+import './styles/security/login.css'
+
+import './styles/pages/homePage.css'
 
 
 

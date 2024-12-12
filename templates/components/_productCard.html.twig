@@ -19,7 +19,7 @@
         <p>Ce produit est en rupture de stock.</p>
     {% endif %}
     </div>
-    <div class="card-footer d-flex"> 
+    <div class="productCardFooter card-footer d-flex"> 
         <a href="{{ path('app_product_details', {'product_id': product.id}) }}" class="btn btn-success">Détails</a> 
        {% if product.quantity > 0 %}
         <a href="{{ path('app_add_to_cart', {'productId': product.id}) }}" class="card-link"><svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="green" class="bi bi-cart-plus-fill" viewBox="0 0 16 16">

@@ -32,15 +32,16 @@ class HomePageController extends AbstractController
         $user = $this->getUser();
 
         // Récupération des nouveautés
-        $newProducts = $productService->getRecentlyProduct(16);
+        $newProducts = $productService->getRecentlyProduct(6);
 
         $favoritesProducts = [];
         $boughtProducts = [];
         $smallPriceProducts = [];
-        $promotionProducts = [];  
         
         
         $productInPromotionForCarousel = $productService->getByPromotion(6);
+
+
 
         if ($user && count($productService->getFavoritesProducts($user)) >= 1) {
             $favoritesProducts = $productService->getFavoritesProducts($user);
@@ -51,7 +52,7 @@ class HomePageController extends AbstractController
         }
         else{
             $smallPriceProducts = $productService->getSmallPrice();
-            $promotionProducts = $promotionService->getPromotionsForProducts();
+            $promotionProducts = $productService->getByPromotion(6);
         }
 
         return $this->render('home_page/index.html.twig', [

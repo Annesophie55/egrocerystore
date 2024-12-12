@@ -14,50 +14,13 @@
   margin-bottom: 10px;
 }
 
-/* carrousel */
-
-#carouselPromo{
-  height: 400px !important;
-  z-index: 2;
-}
-
-#btnAllPromos{
-  position: absolute;
-  z-index: 1;
-  bottom: 25%;
-  right: 10%;
-}
-
-.carousel-item{
-  height: 420px !important;
-  width: 100% !important;
-}
-
-.carousel-item img{
-  height: 100% !important;
-}
 
 /* Le formulaire pour filter les résultats de recherche de produit */
 #favoritesSwitch{
   height: 37px;
 }
 
-/* cartes produits */
 
-.bi-star.filled-star {
-  fill: yellow;
-}
-
-#productCard{
-  height: 380px;
-  width: 180px;
-  padding-top: 5px;
-}
- #productImg{
-  height: 120px;
-  width: 120px;
-  margin: 5px auto 0px auto ;
- }
 
 
 /* Carousel */

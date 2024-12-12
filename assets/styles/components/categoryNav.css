@@ -1,0 +1,5 @@
+.categoryNav {
+  position: absolute;
+  width: 100%;
+  transform: translateY(-55px);
+}

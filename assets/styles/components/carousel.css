@@ -1,0 +1,22 @@
+/* carrousel */
+
+#carouselPromo{
+  height: 400px !important;
+  z-index: 2;
+}
+
+#btnAllPromos{
+  position: absolute;
+  z-index: 1;
+  bottom: 25%;
+  right: 10%;
+}
+
+.carousel-item{
+  height: 420px !important;
+  width: 100% !important;
+}
+
+.carousel-item img{
+  height: 100% !important;
+}

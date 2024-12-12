@@ -7,13 +7,13 @@
     {% include 'components/_carrouselPromo.html.twig' %}
     {{ render(controller('App\\Controller\\ComponentsController::categoryInNav')) }}
 
-    <div class="container-fluid" id="sectionNewProduct">
-        <div class="row g gx-2 gy-2">
-            <div class="col-12 col-lg-8 col-md-8 block-produit">
+    <div class="homeContainer mt-3" id="sectionNewProduct">
+        <div class="row g gx-1 gy-2">
+            <div class="col-12 col-lg-6 col-md-6 block-produit">
                 <h1>Les derniers arrivés</h1>
-                <div class="row">
+                <div class="row g gx-1 gy-2">
                     {% for productInfo in newProducts %}
-                    <div class="col-6 col-lg-3 col-md-3">
+                    <div class="col-6 col-lg-4 col-md-4">
                     {% include 'components/_productCard.html.twig' with { 'product': productInfo.product, 'promotion': productInfo.product.promotion, 'nutriScore': productInfo.nutriScore } %}
                     </div>
                     {% endfor %}
@@ -21,9 +21,9 @@
             </div>
             
                 {% if app.user and boughtProducts %}
-            <div class="col-12 col-lg-4 col-md-4">
+            <div class="col-12 col-lg-4 col-md-4 block-produit">
                 <h1>Vos derniers achats</h1>
-                <div class="row">
+                <div class="row g gx-1 gy-2">
                 {% for product in boughtProducts %}
                     <div class="col-12 col-lg-6 col-md-6">
                     {% include 'components/_productCard.html.twig' with { 'product': product } %}
@@ -33,21 +33,21 @@
                 <a class="btn btn-success" href="{{ path('app_bought_products')}}">Voir tous</a>
             </div>
                 {% else %}
-            <div class="col-12 col-lg-4 col-md-4">
+            <div class="col-12 col-lg-4 col-md-4 block-produit">
                 <h1>Promotions</h1>
-                {# <div class="row">
+                <div class="row g gx-1 gy-2">
                 {% for productInProm in promotionProducts %}
                     <div class="col-12 col-lg-6 col-md-6">
                         {% include 'components/_productCard.html.twig' with { 'product': productInProm } %}
                     </div>
                 {% endfor %}
-                </div>                   #}
+                </div>                  
                 {% endif %}
             </div>
-            <div>
+            <div class="block-produit">
                 {% if app.user and favoritesProducts %}
                     <h1>Vos favoris</h1>
-                    <div class="row">
+                    <div class="row g gx-1 gy-2">
                         {% for productInfo in favoritesProducts %}
                         <div class="col-6 col-lg-2 col-md-2">
                             {% include 'components/_productCard.html.twig' with { 'product': productInfo } %}
@@ -56,9 +56,9 @@
                     </div>
                 {% else %}
                     <h1>Petits prix</h1>
-                    <div class="row">
+                    <div class="row g gx-1 gy-2">
                         {% for product in smallPriceProducts %}
-                        <div class="col-6 col-lg-2 col-md-2">
+                        <div class="col-6 col-lg-3 col-md-3">
                             {% include 'components/_productCard.html.twig' with { 'product': product } %}
                         </div>
                         {% endfor %}
