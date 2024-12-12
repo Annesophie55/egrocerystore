@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,6 +49,12 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
+        $user = $token->getUser();
+
+        if(in_array('ROLE_ADMIN', $user->getRoles()))
+         {
+            return new RedirectResponse($this->urlGenerator->generate('app_dashboard'));
+         }
 
         return new RedirectResponse($this->urlGenerator->generate('app_home_page'));
 

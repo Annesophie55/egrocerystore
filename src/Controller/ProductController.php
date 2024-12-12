@@ -133,7 +133,7 @@ class ProductController extends AbstractController
     }
 
     #[Route("/api/search/user/", name:"search_user")]
-    public function searchUser(Request $request, ProductRepository $productRepository): Response {
+    public function searchUser(Request $request, ProductRepository $productRepository, ProductService $productService): Response {
 
         $query = $request->query->get('query');
         if ($query) {
@@ -142,8 +142,11 @@ class ProductController extends AbstractController
             $products = $productRepository->findAll();
         }
 
+        $productInPromotionForCarousel = $productService->getByPromotion(6);
+
         return $this->render('product/index.html.twig',[
             'products' => $products,
+            'productInPromotionForCarousel' => $productInPromotionForCarousel
         ]);
     }
 
