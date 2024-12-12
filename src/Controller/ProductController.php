@@ -106,12 +106,15 @@ class ProductController extends AbstractController
     }
 
     #[Route('/promotions', name:'app_product_promotion')]
-    public function showPromotions()
+    public function showPromotions(ProductService $productService)
     {
         $products = $this->productService->getByPromotion(50);
 
+        $productInPromotionForCarousel = $productService->getByPromotion(6);
+
         return $this->render('product/index.html.twig',[
             'products' => $products,
+            'productInPromotionForCarousel' => $productInPromotionForCarousel
         ]);
     }
 

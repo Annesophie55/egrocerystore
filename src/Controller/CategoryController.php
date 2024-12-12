@@ -48,6 +48,7 @@ class CategoryController extends AbstractController
     public function show(Category $category, ProductService $productService): Response
     {
         $productInPromotionForCarousel = $productService->getByPromotion(6);
+        
         return $this->render('category/show.html.twig', [
             'category' => $category,
             'productInPromotionForCarousel' => $productInPromotionForCarousel
