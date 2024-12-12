@@ -5,10 +5,8 @@ namespace App\Entity;
 use App\Repository\NutritionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: NutritionRepository::class)]
-#[Broadcast]
 class Nutrition
 {
     #[ORM\Id]
