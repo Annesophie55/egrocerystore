@@ -72,10 +72,11 @@
   overflow: hidden;
 }
 
-.carousel-content {
+div.carousel-content {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  height: 80vh;
 }
 
 /* Diapositives */
@@ -89,13 +90,8 @@
 }
 
 /* Images des produits */
-.product-images {
-  position: relative;
-  display: flex;
-}
 
 .product-image {
-  position: relative;
   max-width: 300px;
   border-radius: 5px;
   left: 15%;

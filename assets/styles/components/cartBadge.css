@@ -1,0 +1,11 @@
+.cartBadge {
+  margin-left: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cartBadge span {
+  height: 50%;
+  margin-left: 5px;
+}

@@ -9,7 +9,15 @@ import './styles/app.css';
 
 import './styles/partials.css'
 
-import './styles/components.css'
+import './styles/components/components.css'
+
+import './styles/components/cartBadge.css'
+
+import './styles/components/userDropdown.css'
+
+import './styles/detailsCard.css'
+
+
 
 
 
