@@ -204,60 +204,46 @@ class ProductController extends AbstractController
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-               /** @var UploadedFile $imageFile */
+            /** @var UploadedFile|null $imageFile */
             $imageFile = $form->get('imageFile')->getData();
-            if ($imageFile) {
     
-                try {
-                    $newFilename = $this->fileUploader->upload($imageFile, $this->getParameter('images_directory'));
-                    $product->setImage($newFilename);
-                } catch (FileException $e) {
-                    $this->addFlash('alert', 'Un problème est survenu lors du téléchargement de l\'image. Veuillez réessayer.');
-                }
-    
-                $product->setImage($newFilename);
+            try {
+                // Appel au service ProductService pour gérer l'image
+                $this->productService->handleImageUpload($imageFile, $product, $this->getParameter('images_directory'));
+            } catch (\Exception $e) {
+                $this->addFlash('alert', $e->getMessage());
             }
-
-            $date = new DateTimeImmutable();
-
-            $product->setCreatedAt($date);
     
+            $product->setCreatedAt(new DateTimeImmutable());
             $entityManager->persist($product);
             $entityManager->flush();
     
-            return $this->redirectToRoute('app_product');
+            return $this->redirectToRoute('app_product_list');
         }
     
         return $this->render('product/add.html.twig', [
             'form' => $form->createView(),
         ]);
     }
-
+    
     #[Route('/edit/{id}', name: 'app_product_edit')]
-    public function editProduct(Request $request, Product $product, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function editProduct(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var UploadedFile $imageFile */
-         $imageFile = $form->get('imageFile')->getData();
-         if ($imageFile) {
- 
-             try {
-                $newFilename = $this->fileUploader->upload($imageFile, $this->getParameter('images_directory'));
-                $product->setImage($newFilename);
-             } catch (FileException $e) {
-                 $this->addFlash('alert', 'Un problème est survenu lors du téléchargement de l\'image. Veuillez réessayer.');
-             }
- 
-             $product->setImage($newFilename);
-         }
-
-         $date = new DateTimeImmutable();
-
-         $product->setUpdatedAt($date);
+            /** @var UploadedFile|null $imageFile */
+            $imageFile = $form->get('imageFile')->getData();
     
+            try {
+                // Appel au service ProductService pour gérer l'image
+                $this->productService->handleImageUpload($imageFile, $product, $this->getParameter('images_directory'));
+            } catch (\Exception $e) {
+                $this->addFlash('alert', $e->getMessage());
+            }
+    
+            $product->setUpdatedAt(new DateTimeImmutable());
             $entityManager->flush();
     
             return $this->redirectToRoute('app_product_list');
@@ -266,8 +252,7 @@ class ProductController extends AbstractController
         return $this->render('product/edit.html.twig', [
             'form' => $form->createView(),
         ]);
-    }
-    
+    }    
 
     #[Route('/delete/{id}', name: 'app_product_delete')]
     public function deleteProduct(Product $product): Response

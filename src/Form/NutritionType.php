@@ -14,7 +14,9 @@ class NutritionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('Energie')
+            ->add('energy', null, [
+                'label' => 'Energie'
+            ])
             ->add('saturatedFattyAcid', null, [
                 'label' => 'Acides gras saturés'
             ])

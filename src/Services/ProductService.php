@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entity\Product;
 use App\Repository\ProductRepository;
 use App\Repository\PromotionRepository;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -245,4 +246,19 @@ class ProductService{
 
         return $products;
     }
+
+    public function handleImageUpload($imageFile, Product $product, string $imageDirectory): void
+    {
+        if ($imageFile) {
+            try {
+                // Utilisation du service FileUploader pour télécharger l'image
+                $newFilename = $this->fileUploader->upload($imageFile, $imageDirectory);
+                $product->setImage($newFilename);
+            } catch (\Exception $e) {
+                throw new \Exception('Un problème est survenu lors du téléchargement de l\'image : ' . $e->getMessage());
+            }
+        }
+    }
+    
+
 }
