@@ -2,14 +2,16 @@
 
 namespace App\Controller;
 
+use DateTimeImmutable;
 use App\Entity\Product;
 use App\Form\ProductType;
+use App\Services\FileUploader;
 use App\Services\ProductService;
 use App\Repository\ProductRepository;
 use App\Repository\CategoryRepository;
-use App\Services\FileUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,7 +43,7 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/list', name: 'app_product_list')]
+    #[Route('/admin/list', name: 'app_product_list')]
     public function list(Request $request, ProductRepository $productRepository, PaginatorInterface $paginator): Response
     {
 
@@ -54,8 +56,6 @@ class ProductController extends AbstractController
             $page,
             10 
         );
-
-
     
         return $this->render('product/list.html.twig', [
             'pagination' => $pagination,
@@ -132,26 +132,72 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route("/api/search/user/", name:"search_user")]
-    public function searchUser(Request $request, ProductRepository $productRepository, ProductService $productService): Response {
-
+    #[Route("/api/search/product/", name:"search_product")]
+    public function searchUser(
+        Request $request, 
+        ProductRepository $productRepository, 
+        ProductService $productService, 
+        PaginatorInterface $paginator
+    ): Response {
+    
         $query = $request->query->get('query');
-        if ($query) {
-            $products = $productRepository->searchProducts($query);
-        } else {
-            $products = $productRepository->findAll();
-        }
+        $products = $query 
+            ? $productRepository->searchProducts($query) 
+            : $productRepository->findAll();
+    
+        $queryBuilder = $productRepository->createQueryBuilder('p');
+        $page = max(1, $request->query->getInt('page', 1)); 
+    
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $page,
+            10
+        );
 
         $productInPromotionForCarousel = $productService->getByPromotion(6);
-
-        return $this->render('product/index.html.twig',[
+    
+        return $this->render('product/index.html.twig', [
             'products' => $products,
-            'productInPromotionForCarousel' => $productInPromotionForCarousel
+            'productInPromotionForCarousel' => $productInPromotionForCarousel,
+            'pagination' => $pagination,
         ]);
     }
 
+    #[Route("/admin/api/search/product/", name:"search_product_admin")]
+    public function searchProductAdmin(
+        Request $request, 
+        ProductRepository $productRepository, 
+        PaginatorInterface $paginator
+    ): Response {
+    
+        $query = $request->query->get('query');
+
+        $queryBuilder = $productRepository->createQueryBuilder('p');
+
+        if ($query) {
+            $queryBuilder
+                ->where('p.name LIKE :query')
+                ->setParameter('query', '%' . $query . '%');
+        }
+        
+        $page = max(1, $request->query->getInt('page', 1));
+
+        $pagination = $paginator->paginate(
+            $queryBuilder,
+            $page,
+            10
+        );
+    
+        return $this->render('product/list.html.twig', [
+                'pagination' => $pagination,
+            ]);
+    
+    }
+    
+    
+
     #[Route('/add', name: 'app_product_add')]
-    public function addProduct(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
+    public function addProduct(Request $request, EntityManagerInterface $entityManager): Response
     {
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
@@ -171,6 +217,10 @@ class ProductController extends AbstractController
     
                 $product->setImage($newFilename);
             }
+
+            $date = new DateTimeImmutable();
+
+            $product->setCreatedAt($date);
     
             $entityManager->persist($product);
             $entityManager->flush();
@@ -203,6 +253,10 @@ class ProductController extends AbstractController
  
              $product->setImage($newFilename);
          }
+
+         $date = new DateTimeImmutable();
+
+         $product->setUpdatedAt($date);
     
             $entityManager->flush();
     

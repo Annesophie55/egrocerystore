@@ -1,0 +1,7 @@
+.createdAtFormGroup {
+  display: none;
+}
+
+div#product_nutrition.form-control{
+  display: flex;
+}

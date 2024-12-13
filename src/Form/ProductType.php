@@ -25,11 +25,19 @@ class ProductType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('description')
-            ->add('price')
+            ->add('name', null, [
+                'label' => 'Nom du produit',
+                'required' => true])
+            ->add('description', null, [
+                'label' => 'description du produit',
+                'required' => true
+            ])
+            ->add('price', null, [
+                'label' => 'Prix du produit',
+                'required' => true
+            ])
             ->add('imageFile', FileType::class, [
-                'label' => 'Image (fichier JPG)',
+                'label' => 'Image au format jpg',
                 'mapped' => false, 
                 'required' => false, 
                 'constraints' => [
@@ -66,19 +74,6 @@ class ProductType extends AbstractType
                 $product = $event->getData();
                 $form = $event->getForm();
     
-                if ($product && $product->getId() === null) {
-                    // Formulaire d'ajout
-                    $form->add('createdAt', HiddenType::class, [
-                        'data' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
-                        'mapped' => false,
-                    ]);
-                } else {
-                    // Formulaire d'édition
-                    $form->add('updatedAt', HiddenType::class, [
-                        'data' => (new \DateTimeImmutable())->format('Y-m-d H:i:s'),
-                        'mapped' => false,
-                    ]);
-                }
             });
         ;
     }

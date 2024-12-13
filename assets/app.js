@@ -23,6 +23,8 @@ import './styles/security/login.css'
 
 import './styles/pages/homePage.css'
 
+import './styles/pages/product/add.css'
+
 
 
 

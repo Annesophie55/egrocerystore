@@ -4,7 +4,10 @@
 
 {% block body %}
 <div class="container mt-4">
-    <h2>Liste des produits</h2>
+    <div class="LeadField">
+        <h2>Liste des produits</h2>
+        {{ include('components/_search.html.twig', {'action_path': path('search_product_admin')}) }}
+    </div>
     <table class="table">
         <thead>
             <tr>
