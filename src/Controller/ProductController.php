@@ -37,9 +37,12 @@ class ProductController extends AbstractController
     public function index(): Response
     {
         $products = $this->productService->getProducts();
+
+        $pageTitle = 'Tous les produits';
      
         return $this->render('product/index.html.twig', [
             'products' => $products,
+            'pageTitle' => $pageTitle
         ]);
     }
 
@@ -70,10 +73,13 @@ class ProductController extends AbstractController
         if(!$user){
             return $this->redirectToRoute('app_home');
         }
-        $products = $this->productService->getBoughtProduct($user);
+        $boughtProducts = $this->productService->getBoughtProduct($user);
+
+        $pageTitle = 'Vos dernoers achats';
      
         return $this->render('product/index.html.twig', [
-            'products' => $products,
+            'boughtProducts' => $boughtProducts,
+            'pageTitle' => $pageTitle
         ]);
     }
 
@@ -89,32 +95,28 @@ class ProductController extends AbstractController
     }
 
     #[Route('/category/{category_id}', name: 'app_product_category', methods: 'GET')]
-    public function productByCategory($category_id, CategoryRepository $categoryRepository, ProductService $productService)
+    public function productByCategory($category_id, CategoryRepository $categoryRepository)
     {
-        $category = $categoryRepository->find(['id'=>$category_id]);
+        $pageTitle = $categoryRepository->find(['id'=>$category_id]);
 
         $products = $this->productService->getProductsBycategory($category_id);
-
-        $productInPromotionForCarousel = $productService->getByPromotion(6);
-
-
+        
         return $this->render('product/index.html.twig', [
             'products' => $products,
-            'category' => $category,
-            'productInPromotionForCarousel' => $productInPromotionForCarousel
+            'pageTitle' => $pageTitle
         ]);
     }
 
     #[Route('/promotions', name:'app_product_promotion')]
-    public function showPromotions(ProductService $productService)
+    public function showPromotions()
     {
-        $products = $this->productService->getByPromotion(50);
+        $promotionProducts = $this->productService->getByPromotion(50);
 
-        $productInPromotionForCarousel = $productService->getByPromotion(6);
+        $pageTitle = "Nos Promotions";
 
         return $this->render('product/index.html.twig',[
-            'products' => $products,
-            'productInPromotionForCarousel' => $productInPromotionForCarousel
+            'promotionProducts' => $promotionProducts,
+            'pageTitle' => $pageTitle
         ]);
     }
 
@@ -125,10 +127,13 @@ class ProductController extends AbstractController
         if(!$user){
             return $this->redirectToRoute('app_home');
         }
-        $products = $this->productService->getFavoritesProducts($user);
+        $FavoritesProducts = $this->productService->getFavoritesProducts($user);
+
+        $pageTitle = "Vos Favoris";
 
         return $this->render('product/index.html.twig',[
-            'products' => $products,
+            'products' => $FavoritesProducts,
+            'pageTitle' => $pageTitle
         ]);
     }
 
@@ -155,11 +160,14 @@ class ProductController extends AbstractController
         );
 
         $productInPromotionForCarousel = $productService->getByPromotion(6);
+
+        $pageTitle = "Résultat de la recherche";
     
         return $this->render('product/index.html.twig', [
             'products' => $products,
             'productInPromotionForCarousel' => $productInPromotionForCarousel,
             'pagination' => $pagination,
+            'pageTitle' => $pageTitle
         ]);
     }
 

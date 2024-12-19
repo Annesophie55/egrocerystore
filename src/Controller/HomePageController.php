@@ -37,6 +37,7 @@ class HomePageController extends AbstractController
         $favoritesProducts = [];
         $boughtProducts = [];
         $smallPriceProducts = [];
+        $smallPriceProducts = $productService->getSmallPrice();
         
         
         $productInPromotionForCarousel = $productService->getByPromotion(6);
@@ -49,9 +50,6 @@ class HomePageController extends AbstractController
         if ($user && count($productService->getBoughtProduct($user)) >= 4) {
             $boughtProducts = $productService->getBoughtProduct($user);
             $boughtProducts = array_slice($boughtProducts, 0, 8);
-        }
-        else{
-            $smallPriceProducts = $productService->getSmallPrice();
         }
 
         return $this->render('home_page/index.html.twig', [

@@ -1,18 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProductController!{% endblock %}
+{% block title %}{{ pageTitle }}{% endblock %}
 
 {% block body %}
 
-    {% include 'components/_carrouselPromo.html.twig' %}
-
          {{ render(controller('App\\Controller\\ComponentsController::categoryInNav')) }}
 
-<div class="container-fluid">
+<div class="container-fluid mt-4 mb-4">
     <div class="row">
-    {% if category is defined %}
-        <h1>{{ category.name }}</h1>
-    {% endif %}
+        <h1>{{ pageTitle }}</h1>
+
         {% for product in products %}
         <div class="col-6 col-lg-3 col-md-3" id="productsContainer">
             {% include 'components/_productCard.html.twig'  with {'product': product} %}
