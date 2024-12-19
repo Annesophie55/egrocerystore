@@ -41,18 +41,17 @@ class HomePageController extends AbstractController
         
         $productInPromotionForCarousel = $productService->getByPromotion(6);
 
+        $promotionProducts = $productService->getByPromotion(6);
 
-
-        if ($user && count($productService->getFavoritesProducts($user)) >= 1) {
+        if ($user && count($productService->getFavoritesProducts($user)) >= 4) {
             $favoritesProducts = $productService->getFavoritesProducts($user);
         }
-        if ($user && count($productService->getBoughtProduct($user)) >= 1) {
+        if ($user && count($productService->getBoughtProduct($user)) >= 4) {
             $boughtProducts = $productService->getBoughtProduct($user);
             $boughtProducts = array_slice($boughtProducts, 0, 8);
         }
         else{
             $smallPriceProducts = $productService->getSmallPrice();
-            $promotionProducts = $productService->getByPromotion(6);
         }
 
         return $this->render('home_page/index.html.twig', [
