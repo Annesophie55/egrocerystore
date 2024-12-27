@@ -1,28 +1,49 @@
-{# templates/components/pagination.twig.html #}
 {% if totalPages > 1 %}
-<nav>
+<nav class="mt-3">
   <ul class="pagination justify-content-center">
     {% set prev = currentPage - 1 %}
     {% set next = currentPage + 1 %}
+    {% set startPage = max(1, currentPage - 2) %}
+    {% set endPage = min(totalPages, currentPage + 2) %}
     
     {# Previous button #}
     <li class="page-item {{ currentPage == 1 ? 'disabled' : '' }}">
-      <a class="page-link" href="{{ path(routeName, queryParameters|merge({(pageParameterName): prev})) }}" aria-label="Précédent">
+      <a class="page-link" href="{{ path(routeName, queryParameters|merge({'page': prev})) }}" aria-label="Précédent">
         <span aria-hidden="true">&laquo;</span>
         <span class="sr-only">Précédent</span>
       </a>
     </li>
     
-    {# Page links #}
-    {% for i in totalPages %}
+    {# First page button #}
+    {% if startPage > 1 %}
+    <li class="page-item">
+      <a class="page-link" href="{{ path(routeName, queryParameters|merge({'page': 1})) }}">1</a>
+    </li>
+    {% if startPage > 2 %}
+    <li class="page-item disabled"><span class="page-link">...</span></li>
+    {% endif %}
+    {% endif %}
+    
+    {# Middle pages #}
+    {% for i in startPage..endPage %}
     <li class="page-item {{ i == currentPage ? 'active' : '' }}">
-      <a class="page-link" href="{{ path(routeName, queryParameters|merge({(pageParameterName): i})) }}">{{ i }}</a>
+      <a class="page-link" href="{{ path(routeName, queryParameters|merge({'page': i})) }}">{{ i }}</a>
     </li>
     {% endfor %}
     
+    {# Last page button #}
+    {% if endPage < totalPages %}
+    {% if endPage < totalPages - 1 %}
+    <li class="page-item disabled"><span class="page-link">...</span></li>
+    {% endif %}
+    <li class="page-item">
+      <a class="page-link" href="{{ path(routeName, queryParameters|merge({'page': totalPages})) }}">{{ totalPages }}</a>
+    </li>
+    {% endif %}
+    
     {# Next button #}
     <li class="page-item {{ currentPage == totalPages ? 'disabled' : '' }}">
-      <a class="page-link" href="{{ path(routeName, queryParameters|merge({(pageParameterName): next})) }}" aria-label="Suivant">
+      <a class="page-link" href="{{ path(routeName, queryParameters|merge({'page': next})) }}" aria-label="Suivant">
         <span aria-hidden="true">&raquo;</span>
         <span class="sr-only">Suivant</span>
       </a>

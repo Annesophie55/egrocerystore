@@ -88,12 +88,12 @@ class ProductRepository extends ServiceEntityRepository
   }
 
   public function findLowStockProducts($threshold){
-  return $this->createQueryBuilder('p')
-  ->where('p.quantity <= :threshold')
-  ->setParameter('threshold', $threshold)
-  ->getQuery()
-  ->getResult();
- } 
+    return $this->createQueryBuilder('p')
+    ->where('p.quantity <= :threshold')
+    ->setParameter('threshold', $threshold)
+    ->getQuery()
+    ->getResult();
+  } 
 
 
 //    /**

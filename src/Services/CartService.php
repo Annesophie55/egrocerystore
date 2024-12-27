@@ -3,7 +3,6 @@
 
 namespace App\Services;
 
-use App\Entity\Product;
 use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;

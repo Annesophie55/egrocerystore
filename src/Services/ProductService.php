@@ -190,25 +190,34 @@ class ProductService{
 
     }
 
-    public function getFavoritesProducts($user)
-    {
-
-        // Récupération des favoris de l'utilisateur
-        $favorites = $user->getFavorite();
-    
-        return $favorites;
+    public function manageFavorites($user, ?Product $product = null, string $action = 'get')
+    {   
+    // Vérification si l'utilisateur est authentifié
+    if (!$user) {
+        throw new \InvalidArgumentException('Utilisateur non authentifié.');
     }
 
-    public function addFavoriteProduct($user, $product)
-    {
-        $newfavorite = $user->addFavorite($product);
-        return $newfavorite;
+    // Gestion des actions
+    switch ($action) {
+        case 'add':
+            if ($product && !$user->getFavorite()->contains($product)) {
+                $user->addFavorite($product);
+            }
+            break;
+
+        case 'remove':
+            if ($product && $user->getFavorite()->contains($product)) {
+                $user->removeFavorite($product);
+            }
+            break;
+
+        case 'get':
+        default:
+            return $user->getFavorite();
     }
 
-    public function removeFavoriteProduct($user, $product)
-    {
-        $deletedProduct = $user->removeFavorite($product);
-        return $deletedProduct;
+    // Retourne l'état actuel des favoris après modification, utile pour certaines actions
+    return $user->getFavorite();
     }
 
     public function getBoughtProduct($user){
@@ -260,5 +269,21 @@ class ProductService{
         }
     }
     
+    public function paginateProducts($queryBuilder, $request, $limit = 10)
+    {
+    $page = max(1, $request->query->getInt('page', 1));
+
+    $paginator = new \Knp\Component\Pager\Paginator();
+    return $paginator->paginate(
+        $queryBuilder,
+        $page,
+        $limit
+    );
+    }
+
+    public function getLowStockProducts($threshold)
+    {
+    return $this->productRepository->findLowStockProducts($threshold);
+    }
 
 }

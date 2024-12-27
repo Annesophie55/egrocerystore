@@ -1,15 +1,16 @@
 .homeContainer .row{
-  /* display: flex;
+  display: flex;
   justify-content: center;
-  align-items: center; */
   width: 100%;
 }
 .homeContainer {
-  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .block-produit {
   background-color: #ffff;
-  margin: 25px auto;
+  margin: 25px;
   padding: 15px;
   border-radius: 5px;
 }
@@ -19,8 +20,8 @@
 }
 
 .block-produit:nth-of-type(3) {
-  margin-top: 20px;
-  width: 70%;
+  flex-direction: column;
+  width: 87%;
 }
 
 .block-produit #productCard {

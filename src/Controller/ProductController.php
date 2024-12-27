@@ -9,6 +9,7 @@ use App\Services\FileUploader;
 use App\Services\ProductService;
 use App\Repository\ProductRepository;
 use App\Repository\CategoryRepository;
+use App\Services\PaginationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -47,23 +48,17 @@ class ProductController extends AbstractController
     }
 
     #[Route('/admin/list', name: 'app_product_list')]
-    public function list(Request $request, ProductRepository $productRepository, PaginatorInterface $paginator): Response
+    public function list(PaginationService $paginationService, ProductRepository $productRepository, Request $request): Response
     {
-
-        $queryBuilder = $productRepository->createQueryBuilder('p');
-
-        $page = max(1, $request->query->getInt('page', 1)); 
-    
-        $pagination = $paginator->paginate(
-            $queryBuilder,
-            $page,
-            10 
-        );
+        $queryBuilder = $productRepository->createQueryBuilder('p'); // Requête pour récupérer tous les produits
+        $pagination = $paginationService->paginate($queryBuilder, $request);
     
         return $this->render('product/list.html.twig', [
             'pagination' => $pagination,
+            'pageTitle' => 'Liste des produits',
         ]);
     }
+    
 
 
     #[Route('/bought', name: 'app_bought_products')]
@@ -73,12 +68,12 @@ class ProductController extends AbstractController
         if(!$user){
             return $this->redirectToRoute('app_home');
         }
-        $boughtProducts = $this->productService->getBoughtProduct($user);
+        $products = $this->productService->getBoughtProduct($user);
 
         $pageTitle = 'Vos dernoers achats';
      
         return $this->render('product/index.html.twig', [
-            'boughtProducts' => $boughtProducts,
+            'products' => $products,
             'pageTitle' => $pageTitle
         ]);
     }
@@ -94,54 +89,89 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/category/{category_id}', name: 'app_product_category', methods: 'GET')]
-    public function productByCategory($category_id, CategoryRepository $categoryRepository)
-    {
-        $pageTitle = $categoryRepository->find(['id'=>$category_id]);
+    #[Route('/category/{category_id}', name: 'app_product_category')]
+public function productsByCategory(
+    $category_id,
+    CategoryRepository $categoryRepository,
+    ProductRepository $productRepository,
+    PaginationService $paginationService,
+    Request $request
+): Response {
+    $category = $categoryRepository->find($category_id);
+    if (!$category) {
+        throw $this->createNotFoundException('Catégorie non trouvée.');
+    }
 
-        $products = $this->productService->getProductsBycategory($category_id);
-        
+    $queryBuilder = $productRepository->createQueryBuilder('p')
+        ->leftJoin('p.categories', 'c')
+        ->addSelect('c')
+        ->where('c.id = :category_id')
+        ->setParameter('category_id', $category_id);
+
+    $paginationData = $paginationService->paginate($queryBuilder, $request);
+
+    return $this->render('product/index.html.twig', [
+        'pagination' => $paginationData['pagination'],
+        'pageTitle' => "Produits dans la catégorie {$category->getName()}",
+        'totalPages' => $paginationData['totalPages'],
+        'currentPage' => $paginationData['currentPage'],
+         'routeName' => 'app_product_category',
+         'queryParameters' => ['category_id' => $category_id],
+    ]);
+}
+
+    
+
+    #[Route('/promotions', name: 'app_product_promotion')]
+    public function promotions(
+        ProductRepository $productRepository,
+        PaginationService $paginationService,
+        Request $request
+    ): Response {
+        // Récupérer le QueryBuilder pour les produits en promotion
+        $queryBuilder = $productRepository->createQueryBuilder('p')
+            ->leftJoin('p.promotion', 'promotion')
+            ->addSelect('promotion')
+            ->where('promotion.rising IS NOT NULL');
+    
+        // Appeler le service de pagination
+        $paginationData = $paginationService->paginate($queryBuilder, $request);
+    
         return $this->render('product/index.html.twig', [
-            'products' => $products,
-            'pageTitle' => $pageTitle
+            'pagination' => $paginationData['pagination'],
+            'pageTitle' => "Produits en Promotion",
+            'totalPages' => $paginationData['totalPages'],
+            'currentPage' => $paginationData['currentPage'],
+            'routeName' => 'app_product_promotion'
         ]);
     }
+    
+    
 
-    #[Route('/promotions', name:'app_product_promotion')]
-    public function showPromotions()
-    {
-        $promotionProducts = $this->productService->getByPromotion(50);
-
-        $pageTitle = "Nos Promotions";
-
-        return $this->render('product/index.html.twig',[
-            'promotionProducts' => $promotionProducts,
-            'pageTitle' => $pageTitle
-        ]);
-    }
-
-    #[Route('/favorite', name:'app_product_favorite')]
-    public function showFavoris()
-    {
+    #[Route('/favorite', name: 'app_product_favorite')]
+    public function showFavorites(
+        ProductService $productService,
+        PaginationService $paginationService,
+        Request $request
+    ): Response {
         $user = $this->getUser();
-        if(!$user){
+        if (!$user) {
             return $this->redirectToRoute('app_home');
         }
-        $FavoritesProducts = $this->productService->getFavoritesProducts($user);
-
-        $pageTitle = "Vos Favoris";
-
-        return $this->render('product/index.html.twig',[
-            'products' => $FavoritesProducts,
-            'pageTitle' => $pageTitle
+    
+        $favorites = $productService->manageFavorites($user);
+    
+        return $this->render('product/index.html.twig', [
+            'products' => $favorites,
+            'pageTitle' => "Vos produits favoris",
         ]);
     }
+    
 
     #[Route("/api/search/product/", name:"search_product")]
     public function searchUser(
         Request $request, 
         ProductRepository $productRepository, 
-        ProductService $productService, 
         PaginatorInterface $paginator
     ): Response {
     
@@ -159,13 +189,10 @@ class ProductController extends AbstractController
             10
         );
 
-        $productInPromotionForCarousel = $productService->getByPromotion(6);
-
         $pageTitle = "Résultat de la recherche";
     
         return $this->render('product/index.html.twig', [
             'products' => $products,
-            'productInPromotionForCarousel' => $productInPromotionForCarousel,
             'pagination' => $pagination,
             'pageTitle' => $pageTitle
         ]);
